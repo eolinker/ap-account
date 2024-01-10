@@ -19,17 +19,17 @@ func (o *Department) IdValue() int64 {
 	return o.Id
 }
 
-type DepartmentUser struct {
+type DepartmentMember struct {
 	Id         int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key;"`
 	Oid        string    `gorm:"column:oid;type:VARCHAR(36);NOT NULL;comment: 组织id;index:oid;unique_index:oid_uid;"`
 	Uid        string    `gorm:"column:uid;type:VARCHAR(36);NOT NULL;comment: 用户id;index:uid;unique_index:oid_uid;"`
 	CreateTime time.Time `gorm:"column:create_time;type:timestamp;NOT NULL; comment: 创建时间"`
 }
 
-func (o *DepartmentUser) TableName() string {
-	return "department_user"
+func (o *DepartmentMember) TableName() string {
+	return "department_member"
 }
 
-func (o *DepartmentUser) IdValue() int64 {
+func (o *DepartmentMember) IdValue() int64 {
 	return o.Id
 }
