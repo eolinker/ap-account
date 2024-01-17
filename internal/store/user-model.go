@@ -22,7 +22,7 @@ func (u *UserAuth) IdValue() int64 {
 
 type UserInfo struct {
 	Id         int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key"`
-	Uid        int64     `gorm:"column:uid;type:BIGINT(20);NOT NULL;comment: 用户id;;"`
+	Uid        string    `gorm:"column:uid;type:varchar(36);NOT NULL;comment: 用户id;;"`
 	Status     uint8     `gorm:"column:status;type:TINYINT(3) UNSIGNED;NOT NULL;default:0;comment: 用户状态 0-unknown 1-active 2-inactive;"`
 	UserName   string    `gorm:"column:username;type:VARCHAR(50);NOT NULL;comment: 用户名;"`
 	NickName   string    `gorm:"column:nickname;type:VARCHAR(50);NOT NULL;comment: 昵称;"`
