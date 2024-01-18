@@ -1,4 +1,4 @@
-package controller
+package account
 
 import "gitlab.eolink.com/apinto/aoaccount/service"
 
