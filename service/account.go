@@ -1,6 +1,9 @@
-package service
+package account
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 var (
 	ErrorUserNotFound = errors.New("user not found")
@@ -9,13 +12,13 @@ var (
 type UserId = string
 
 type AccountService interface {
-	Login(driver string, identifier string, certificate string) (UserId, error)
-	AddAuth(driver string, uid string, identifier string, certificate string) error
+	Login(ctx context.Context, driver string, identifier string, certificate string) (UserId, error)
+	AddAuth(ctx context.Context, driver string, uid string, identifier string, certificate string) error
 
-	CheckAuth(driver string, identifier string, certificate string) (UserId, error)
+	CheckAuth(ctx context.Context, driver string, identifier string, certificate string) (UserId, error)
 
-	Logout(driver string, identifier string) error
-	GetUserInfo(uid UserId) (UserInfo, error)
-	UpdateUserInfo(uid UserId, userInfo UserInfo, operator UserId) error
-	Remove(uid UserId) error
+	Logout(ctx context.Context, driver string, identifier string) error
+	GetUserInfo(ctx context.Context, uid UserId) (UserInfo, error)
+	UpdateUserInfo(ctx context.Context, uid UserId, userInfo UserInfo, operator UserId) error
+	Remove(ctx context.Context, uid UserId) error
 }

@@ -6,35 +6,35 @@ import (
 	"reflect"
 )
 
-type UserAuthStore interface {
+type IUserAuthStore interface {
 	store.IBaseStore[UserAuth]
 }
 type userAuthStore struct {
 	store.BaseStore[UserAuth]
 }
 
-type UserInfoStore interface {
+type IUserInfoStore interface {
 	store.IBaseStore[UserInfo]
 }
 type userInfoStore struct {
 	store.BaseStore[UserInfo]
 }
 
-type UserLoginLogStore interface {
+type IUserLoginLogStore interface {
 	store.IBaseStore[UserLoginLog]
 }
 type userLoginLogStore struct {
 	store.BaseStore[UserLoginLog]
 }
 
-type UserRegisterLogStore interface {
+type IUserRegisterLogStore interface {
 	store.IBaseStore[UserRegisterLog]
 }
 type userRegisterLogStore struct {
 	store.BaseStore[UserRegisterLog]
 }
 
-type UserInfoUpdateLogStore interface {
+type IUserInfoUpdateLogStore interface {
 	store.IBaseStore[UserInfoUpdateLog]
 }
 type userInfoUpdateLogStore struct {
@@ -42,21 +42,21 @@ type userInfoUpdateLogStore struct {
 }
 
 func init() {
-	autowire.Auto[UserAuthStore](func() reflect.Value {
+	autowire.Auto[IUserAuthStore](func() reflect.Value {
 		return reflect.ValueOf(new(userAuthStore))
 	})
-	autowire.Auto[UserInfoStore](func() reflect.Value {
+	autowire.Auto[IUserInfoStore](func() reflect.Value {
 		return reflect.ValueOf(new(userInfoStore))
 	})
 
-	autowire.Auto[UserLoginLogStore](func() reflect.Value {
+	autowire.Auto[IUserLoginLogStore](func() reflect.Value {
 		return reflect.ValueOf(new(userLoginLogStore))
 	})
-	autowire.Auto[UserRegisterLogStore](func() reflect.Value {
+	autowire.Auto[IUserRegisterLogStore](func() reflect.Value {
 		return reflect.ValueOf(new(userRegisterLogStore))
 	})
 
-	autowire.Auto[UserInfoUpdateLogStore](func() reflect.Value {
+	autowire.Auto[IUserInfoUpdateLogStore](func() reflect.Value {
 		return reflect.ValueOf(new(userInfoUpdateLogStore))
 	})
 }

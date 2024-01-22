@@ -21,17 +21,17 @@ func (u *UserAuth) IdValue() int64 {
 }
 
 type UserInfo struct {
-	Id         int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key"`
-	Uid        string    `gorm:"column:uid;type:varchar(36);NOT NULL;comment: 用户id;;"`
-	Status     uint8     `gorm:"column:status;type:TINYINT(3) UNSIGNED;NOT NULL;default:0;comment: 用户状态 0-unknown 1-active 2-inactive;"`
-	UserName   string    `gorm:"column:username;type:VARCHAR(50);NOT NULL;comment: 用户名;"`
-	NickName   string    `gorm:"column:nickname;type:VARCHAR(50);NOT NULL;comment: 昵称;"`
-	Gender     uint8     `gorm:"column:gender;type:TINYINT(2) UNSIGNED;NOT NULL;default:0;comment: 性别 0-unknown 1-male 2 female;"`
-	Mobile     string    `gorm:"column:mobile;type:VARCHAR(16);NOT NULL;comment: 手机号;"`
-	Email      string    `gorm:"column:email;type:VARCHAR(100);NOT NULL;comment: 邮箱;"`
-	CreateTime time.Time `gorm:"column:create_time;type:timestamp;NOT NULL;comment: 创建时间;"`
-	UpdateTime time.Time `gorm:"column:update_time;type:timestamp;NOT NULL;comment: 更新时间;"`
-	PushToken  string    `gorm:"column:push_token;type:VARCHAR(50);NOT NULL;comment: 推送token;"`
+	Id        int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key"`
+	Uid       string    `gorm:"column:uid;type:varchar(36);NOT NULL;comment: 用户id;;"`
+	Status    uint8     `gorm:"column:status;type:TINYINT(3) UNSIGNED;NOT NULL;default:0;comment: 用户状态 0-unknown 1-active 2-inactive;"`
+	UserName  string    `gorm:"column:username;type:VARCHAR(50);NOT NULL;comment: 用户名;"`
+	NickName  string    `gorm:"column:nickname;type:VARCHAR(50);NOT NULL;comment: 昵称;"`
+	Gender    uint8     `gorm:"column:gender;type:TINYINT(2) UNSIGNED;NOT NULL;default:0;comment: 性别 0-unknown 1-male 2 female;"`
+	Mobile    string    `gorm:"column:mobile;type:VARCHAR(16);NOT NULL;comment: 手机号;"`
+	Email     string    `gorm:"column:email;type:VARCHAR(100);NOT NULL;comment: 邮箱;"`
+	CreateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP;column:create_at;comment:创建时间"`
+	UpdateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;column:update_at;comment:修改时间" json:"update_time"`
+	PushToken string    `gorm:"column:push_token;type:VARCHAR(50);NOT NULL;comment: 推送token;"`
 }
 
 func (u *UserInfo) TableName() string {
