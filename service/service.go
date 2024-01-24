@@ -3,6 +3,8 @@ package account
 import (
 	"context"
 	"errors"
+	"gitlab.eolink.com/apinto/common/autowire"
+	"reflect"
 )
 
 var (
@@ -11,14 +13,18 @@ var (
 
 type UserId = string
 
-type AccountService interface {
-	Login(ctx context.Context, driver string, identifier string, certificate string) (UserId, error)
+type IAccountService interface {
 	AddAuth(ctx context.Context, driver string, uid string, identifier string, certificate string) error
-
+	CreateAccount(ctx context.Context, uid string, userInfo UserInfo) (UserId, error)
 	CheckAuth(ctx context.Context, driver string, identifier string, certificate string) (UserId, error)
 
-	Logout(ctx context.Context, driver string, identifier string) error
 	GetUserInfo(ctx context.Context, uid UserId) (UserInfo, error)
 	UpdateUserInfo(ctx context.Context, uid UserId, userInfo UserInfo, operator UserId) error
 	Remove(ctx context.Context, uid UserId) error
+}
+
+func init() {
+	autowire.Auto[IAccountService](func() reflect.Value {
+		return reflect.ValueOf(new(imlAccountService))
+	})
 }
