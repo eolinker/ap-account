@@ -15,10 +15,10 @@ type IUserGroupMemberStore interface {
 }
 
 type imlUserGroupStore struct {
-	store.BaseStore[UserGroup]
+	store.Store[UserGroup]
 }
 type imlUserGroupMemberStore struct {
-	store.BaseStore[UserGroupMember]
+	store.Store[UserGroupMember]
 }
 
 func init() {

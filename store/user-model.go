@@ -5,9 +5,9 @@ import "time"
 type UserAuth struct {
 	Id          int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key;"`
 	Uid         string    `gorm:"column:uid;type:type:VARCHAR(36);NOT NULL;comment: 用户id;index:uid;"`
-	Driver      string    `gorm:"column:driver;type:VARCHAR(10);NOT NULL;comment: 登录类型;unique_index:only;index:driver;"`
-	Identifier  string    `gorm:"column:identifier;type:VARCHAR(255);NOT NULL; comment:手机号 邮箱 用户名或第三方应用的唯一标识;"`
-	Certificate string    `gorm:"column:certificate;type:VARCHAR(64);NOT NULL;comment: 密码凭证，站内的保存密码，站外的不保存或保存token"`
+	Driver      string    `gorm:"column:driver;type:VARCHAR(10);NOT NULL;comment: 登录类型;uniqueIndex:only;index:driver;"`
+	Identifier  string    `gorm:"column:identifier;type:VARCHAR(255);NOT NULL; comment:手机号 邮箱 用户名或第三方应用的唯一标识;uniqueIndex:only"`
+	Certificate string    `gorm:"column:certificate;type:VARCHAR(512);NOT NULL;comment: 密码凭证，站内的保存密码，站外的不保存或保存token"`
 	CreateTime  time.Time `gorm:"column:create_time;type:timestamp;NOT NULL; comment: 创建时间"`
 	UpdateTime  time.Time `gorm:"column:update_time;type:timestamp;NOT NULL;comment: 更新时间"`
 }
@@ -24,14 +24,14 @@ type UserInfo struct {
 	Id        int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key"`
 	Uid       string    `gorm:"column:uid;type:varchar(36);NOT NULL;comment: 用户id;;"`
 	Status    uint8     `gorm:"column:status;type:TINYINT(3) UNSIGNED;NOT NULL;default:0;comment: 用户状态 0-unknown 1-active 2-inactive;"`
-	UserName  string    `gorm:"column:username;type:VARCHAR(50);NOT NULL;comment: 用户名;"`
-	NickName  string    `gorm:"column:nickname;type:VARCHAR(50);NOT NULL;comment: 昵称;"`
+	Name      string    `gorm:"column:name;type:VARCHAR(50);NOT NULL;comment: 用户名;"`
 	Gender    uint8     `gorm:"column:gender;type:TINYINT(2) UNSIGNED;NOT NULL;default:0;comment: 性别 0-unknown 1-male 2 female;"`
 	Mobile    string    `gorm:"column:mobile;type:VARCHAR(16);NOT NULL;comment: 手机号;"`
 	Email     string    `gorm:"column:email;type:VARCHAR(100);NOT NULL;comment: 邮箱;"`
 	CreateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP;column:create_at;comment:创建时间"`
 	UpdateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;column:update_at;comment:修改时间" json:"update_time"`
 	PushToken string    `gorm:"column:push_token;type:VARCHAR(50);NOT NULL;comment: 推送token;"`
+	IsDeleted bool      `gorm:"type:tinyint(1);not null;column:is_delete;comment:是否删除"`
 }
 
 func (u *UserInfo) TableName() string {
@@ -62,7 +62,7 @@ func (u *UserLoginLog) IdValue() int64 {
 
 type UserRegisterLog struct {
 	Id             int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key;"`
-	Uid            string    `gorm:"column:uid;type:type:VARCHAR(36);NOT NULL;comment: 用户id;unique_index:uid;"`
+	Uid            string    `gorm:"column:uid;type:type:VARCHAR(36);NOT NULL;comment: 用户id;uniqueIndex:uid;"`
 	Driver         string    `gorm:"column:driver;type:varchar(10); NOT NULL;comment: 登录类型;index:driver;"`
 	RegisterTime   time.Time `gorm:"column:register_time;type:timestamp;NOT NULL;comment: 注册时间"`
 	RegisterIp     string    `gorm:"column:register_ip;type:VARCHAR(16);NOT NULL;comment: 注册ip"`

@@ -6,39 +6,48 @@ import (
 	"reflect"
 )
 
+var (
+	_ IUserAuthStore        = (*userAuthStore)(nil)
+	_ IUserInfoStore        = (*userInfoStore)(nil)
+	_ IUserLoginLogStore    = (*userLoginLogStore)(nil)
+	_ IUserRegisterLogStore = (*userRegisterLogStore)(nil)
+	_ IUserGroupStore       = (*imlUserGroupStore)(nil)
+)
+
 type IUserAuthStore interface {
 	store.IBaseStore[UserAuth]
 }
 type userAuthStore struct {
-	store.BaseStore[UserAuth]
+	store.Store[UserAuth]
 }
 
 type IUserInfoStore interface {
 	store.IBaseStore[UserInfo]
+	//SearchWithDepartment(ctx context.Context, department, keyword string) ([]*UserInfo, error)
 }
 type userInfoStore struct {
-	store.BaseStore[UserInfo]
+	store.Store[UserInfo]
 }
 
 type IUserLoginLogStore interface {
 	store.IBaseStore[UserLoginLog]
 }
 type userLoginLogStore struct {
-	store.BaseStore[UserLoginLog]
+	store.Store[UserLoginLog]
 }
 
 type IUserRegisterLogStore interface {
 	store.IBaseStore[UserRegisterLog]
 }
 type userRegisterLogStore struct {
-	store.BaseStore[UserRegisterLog]
+	store.Store[UserRegisterLog]
 }
 
 type IUserInfoUpdateLogStore interface {
 	store.IBaseStore[UserInfoUpdateLog]
 }
 type userInfoUpdateLogStore struct {
-	store.BaseStore[UserInfoUpdateLog]
+	store.Store[UserInfoUpdateLog]
 }
 
 func init() {
