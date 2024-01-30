@@ -2,6 +2,8 @@ package role
 
 import (
 	"context"
+	"gitlab.eolink.com/apinto/common/autowire"
+	"reflect"
 )
 
 type IRoleService interface {
@@ -10,4 +12,10 @@ type IRoleService interface {
 	Save(ctx context.Context, id string, name string) error
 	Create(ctx context.Context, id string, name string) error
 	Delete(ctx context.Context, id string) error
+}
+
+func init() {
+	autowire.Auto[IRoleService](func() reflect.Value {
+		return reflect.ValueOf(new(imlRoleService))
+	})
 }

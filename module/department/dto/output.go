@@ -9,6 +9,12 @@ type Department struct {
 	Number   int           `json:"number"`
 }
 
+type Simple struct {
+	Id       string    `json:"id"`
+	Name     string    `json:"name"`
+	Children []*Simple `json:"children"`
+	Parent   string    `json:"-"`
+}
 type Member struct {
 	Id              string        `json:"id"`
 	Name            string        `json:"name"`

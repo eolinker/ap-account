@@ -10,14 +10,33 @@ import (
 )
 
 var (
-	_ IRoleModule = (*imlRoleModel)(nil)
+	_ IRoleModule = (*imlRoleModule)(nil)
 )
 
-type imlRoleModel struct {
+type imlRoleModule struct {
 	service role.IRoleService `autowired:""`
 }
 
-func (m *imlRoleModel) Crete(ctx context.Context, id string, input *role_dto.CreateRole) error {
+func (m *imlRoleModule) Delete(ctx context.Context, id string) error {
+	return m.service.Delete(ctx, id)
+}
+
+func (m *imlRoleModule) Get(ctx context.Context, id string) (*role_dto.Role, error) {
+	v, err := m.service.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &role_dto.Role{
+		Id:         v.Id,
+		Name:       v.Name,
+		Creator:    auto.UUID(v.Creator),
+		CreateTime: auto.TimeLabel(v.CreateTime),
+		Usage:      0,
+	}, nil
+}
+
+func (m *imlRoleModule) Crete(ctx context.Context, id string, input *role_dto.CreateRole) error {
 	if id == "" {
 		id = uuid.NewString()
 	}
@@ -25,12 +44,12 @@ func (m *imlRoleModel) Crete(ctx context.Context, id string, input *role_dto.Cre
 	return m.service.Create(ctx, id, input.Name)
 }
 
-func (m *imlRoleModel) Edit(ctx context.Context, id string, input *role_dto.Edit) error {
+func (m *imlRoleModule) Edit(ctx context.Context, id string, input *role_dto.Edit) error {
 
 	return m.service.Save(ctx, id, input.Name)
 }
 
-func (m *imlRoleModel) Simple(ctx context.Context) ([]*role_dto.Simple, error) {
+func (m *imlRoleModule) Simple(ctx context.Context) ([]*role_dto.Simple, error) {
 	list, err := m.service.List(ctx)
 	if err != nil {
 		return nil, err
@@ -43,7 +62,7 @@ func (m *imlRoleModel) Simple(ctx context.Context) ([]*role_dto.Simple, error) {
 	}), nil
 }
 
-func (m *imlRoleModel) List(ctx context.Context) ([]*role_dto.Role, error) {
+func (m *imlRoleModule) List(ctx context.Context) ([]*role_dto.Role, error) {
 	list, err := m.service.List(ctx)
 	if err != nil {
 		return nil, err

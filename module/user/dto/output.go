@@ -9,9 +9,9 @@ type UserInfo struct {
 	Uid        string       `json:"id"`
 	Name       string       `json:"name"`
 	Email      string       `json:"email"`
-	Department []auto.Label `json:"department"`
+	Department []auto.Label `json:"department" aolabel:"department"`
 	Enable     bool         `json:"enable"`
-	UserGroups []auto.Label `json:"user_group"`
+	UserGroups []auto.Label `json:"user_group" aolabel:"user_group"`
 }
 
 func CreateUserInfoFromModel(m *user.User) *UserInfo {

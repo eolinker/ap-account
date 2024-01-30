@@ -5,17 +5,35 @@ import (
 	"errors"
 	"gitlab.eolink.com/apinto/aoaccount/common"
 	"gitlab.eolink.com/apinto/aoaccount/store"
+	"gitlab.eolink.com/apinto/common/auto"
+	"gitlab.eolink.com/apinto/common/autowire"
 	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"
 	"time"
 )
 
 var (
-	_ IUserGroupService = (*imlUserGroupService)(nil)
+	_ IUserGroupService    = (*imlUserGroupService)(nil)
+	_ autowire.Complete    = (*imlUserGroupService)(nil)
+	_ auto.CompleteService = (*imlUserGroupService)(nil)
 )
 
 type imlUserGroupService struct {
 	store store.IUserGroupStore
+}
+
+func (s *imlUserGroupService) OnComplete() {
+	auto.RegisterService("user_group", s)
+}
+
+func (s *imlUserGroupService) GetLabels(ctx context.Context, ids ...string) map[string]string {
+	list, err := s.store.ListQuery(ctx, "uuid in ?", []interface{}{ids}, "id")
+	if err != nil {
+		return map[string]string{}
+	}
+	return utils.SliceToMapO(list, func(t *store.UserGroup) (string, string) {
+		return t.UUID, t.Name
+	})
 }
 
 func (s *imlUserGroupService) Crete(ctx context.Context, id, name string) error {

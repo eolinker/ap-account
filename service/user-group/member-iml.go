@@ -4,6 +4,7 @@ import (
 	"context"
 	"gitlab.eolink.com/apinto/aoaccount/service/usage"
 	"gitlab.eolink.com/apinto/aoaccount/store"
+	"gitlab.eolink.com/apinto/common/autowire"
 	"gitlab.eolink.com/apinto/common/utils"
 	"time"
 )
@@ -11,10 +12,15 @@ import (
 var (
 	_ IUserGroupMemberService = (*imlUserMemberService)(nil)
 	_ usage.IUserUsageService = (*imlUserMemberService)(nil)
+	_ autowire.Complete       = (*imlUserMemberService)(nil)
 )
 
 type imlUserMemberService struct {
-	store store.IUserGroupMemberStore
+	store store.IUserGroupMemberStore `autowired:""`
+}
+
+func (s *imlUserMemberService) OnComplete() {
+	usage.RegisterUser(s)
 }
 
 func (s *imlUserMemberService) RemoveUser(ctx context.Context, ids ...string) error {
@@ -25,14 +31,18 @@ func (s *imlUserMemberService) RemoveUser(ctx context.Context, ids ...string) er
 	return nil
 }
 
-func (s *imlUserMemberService) AddGroup(ctx context.Context, userID, groupID string) error {
-	err := s.store.Save(ctx, &store.UserGroupMember{
-		Id:         0,
-		Gid:        userID,
-		Uid:        groupID,
-		CreateTime: time.Now(),
-	})
-	return err
+func (s *imlUserMemberService) AddGroup(ctx context.Context, groupID string, userIds ...string) error {
+
+	for _, uid := range userIds {
+		err := s.store.Save(ctx, &store.UserGroupMember{
+			Id:         0,
+			Gid:        groupID,
+			Uid:        uid,
+			CreateTime: time.Now(),
+		})
+		return err
+	}
+	return nil
 }
 
 func (s *imlUserMemberService) RemoveGroup(ctx context.Context, userID, groupID string) error {

@@ -7,3 +7,7 @@ type Create struct {
 type Edit struct {
 	Name string `json:"name"`
 }
+
+type AddMember struct {
+	Users []string `json:"ids"`
+}

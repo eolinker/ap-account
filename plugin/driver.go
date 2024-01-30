@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	pm3.Register("core", new(Driver))
+	pm3.Register("users", new(Driver))
 }
 
 type Driver struct {

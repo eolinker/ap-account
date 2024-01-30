@@ -22,6 +22,17 @@ type imlUserService struct {
 	store store.IUserInfoStore `autowired:""`
 }
 
+func (s *imlUserService) Get(ctx context.Context, ids ...string) ([]*User, error) {
+	if len(ids) == 0 {
+		return nil, errors.New("ids is empty")
+	}
+	list, err := s.store.ListQuery(ctx, "uid in (?)", []interface{}{ids}, "name asc")
+	if err != nil {
+		return nil, err
+	}
+	return utils.SliceToSlice(list, CreateModel), nil
+}
+
 func (s *imlUserService) CountStatus(ctx context.Context, status int) (int64, error) {
 	return s.store.CountQuery(ctx, "status=?", status)
 }
@@ -87,28 +98,24 @@ func (s *imlUserService) Delete(ctx context.Context, ids ...string) error {
 
 func (s *imlUserService) Search(ctx context.Context, department, keyword string) ([]*User, error) {
 
-	where := make([]string, 0, 5)
+	where := make([]string, 0, 2)
 	args := make([]interface{}, 5)
 	if keyword != "" {
 		kv := fmt.Sprint("%", keyword, "%")
-		where = append(where, "`name` LIKE ?")
-		args = append(args, kv)
-
-		where = append(where, "`email` LIKE ?")
-		args = append(args, kv)
-
-		where = append(where, "`mobile` LIKE ?")
-		args = append(args, kv)
-
-		where = append(where, "`push_token` Like ?")
-		args = append(args, kv)
+		where = append(where, "(`name` LIKE ? or email` LIKE ? or `mobile` LIKE ? or `push_token` Like ?)")
+		args = append(args, kv, kv, kv, kv)
 
 	}
-
-	if department != "" {
+	switch strings.ToLower(department) {
+	case "unknown":
+		where = append(where, "not exists (select * from department_member ms where  ms.uid = user_info.uid)")
+	case "disabled":
+		where = append(where, "`status` != 1")
+	default:
 		where = append(where, "exists (select * from department_member ms where ms.department = ? and ms.uid = user_info.uid)")
 		args = append(args, department)
 	}
+
 	list, err := s.store.ListQuery(ctx, strings.Join(where, " and "), args, "`name` asc")
 	if err != nil {
 		return nil, err
@@ -152,6 +159,10 @@ func (s *imlUserService) OnComplete() {
 }
 
 func (s *imlUserService) GetLabels(ctx context.Context, ids ...string) map[string]string {
+
+	if len(ids) == 0 {
+		return map[string]string{}
+	}
 	users, err := s.store.ListQuery(ctx, "uid in (?)", []interface{}{ids}, "id asc")
 	if err != nil {
 		return make(map[string]string)

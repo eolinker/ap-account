@@ -3,6 +3,8 @@ package user
 import (
 	"context"
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
+	"gitlab.eolink.com/apinto/common/autowire"
+	"reflect"
 )
 
 type IUserModule interface {
@@ -12,4 +14,10 @@ type IUserModule interface {
 	Enable(ctx context.Context, user *user_dto.Enable) error
 	CountStatus(ctx context.Context, enable bool) (int, error)
 	Delete(ctx context.Context, ids ...string) error
+}
+
+func init() {
+	autowire.Auto[IUserModule](func() reflect.Value {
+		return reflect.ValueOf(new(imlUserModule))
+	})
 }

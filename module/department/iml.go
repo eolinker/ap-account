@@ -51,6 +51,32 @@ func (m *imlDepartmentModule) Delete(ctx context.Context, id string) error {
 	return m.service.Delete(ctx, id)
 }
 
+func (m *imlDepartmentModule) Simple(ctx context.Context) (*department_dto.Simple, error) {
+	list, err := m.service.Get(ctx)
+	if err != nil {
+		return nil, err
+	}
+	nodes := utils.SliceToMapO(list, func(s *department.Department) (string, *department_dto.Simple) {
+		return s.Id, &department_dto.Simple{
+			Id:     s.Id,
+			Name:   s.Name,
+			Parent: s.ParentId,
+		}
+	})
+	root := &department_dto.Simple{
+		Id:   "",
+		Name: "",
+	}
+	for _, s := range nodes {
+		if p, has := nodes[s.Parent]; has {
+			p.Children = append(p.Children, s)
+			continue
+		}
+		root.Children = append(root.Children, s)
+	}
+	return root, nil
+}
+
 func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Department, int, error) {
 	list, err := m.service.Get(ctx)
 	if err != nil {

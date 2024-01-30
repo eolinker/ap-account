@@ -4,12 +4,12 @@ import "time"
 
 type UserAuth struct {
 	Id          int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key;"`
-	Uid         string    `gorm:"column:uid;type:type:VARCHAR(36);NOT NULL;comment: 用户id;index:uid;"`
+	Uid         string    `gorm:"column:uid;type:VARCHAR(36);NOT NULL;comment: 用户id;index:uid;"`
 	Driver      string    `gorm:"column:driver;type:VARCHAR(10);NOT NULL;comment: 登录类型;uniqueIndex:only;index:driver;"`
 	Identifier  string    `gorm:"column:identifier;type:VARCHAR(255);NOT NULL; comment:手机号 邮箱 用户名或第三方应用的唯一标识;uniqueIndex:only"`
-	Certificate string    `gorm:"column:certificate;type:VARCHAR(512);NOT NULL;comment: 密码凭证，站内的保存密码，站外的不保存或保存token"`
-	CreateTime  time.Time `gorm:"column:create_time;type:timestamp;NOT NULL; comment: 创建时间"`
-	UpdateTime  time.Time `gorm:"column:update_time;type:timestamp;NOT NULL;comment: 更新时间"`
+	Certificate string    `gorm:"column:certificate;type:VARCHAR(512);NOT NULL;comment: 密码凭证，站内的保存密码，站外的不保存或保存token;"`
+	CreateTime  time.Time `gorm:"column:create_time;type:timestamp; NOT NULL; comment:创建时间;"`
+	UpdateTime  time.Time `gorm:"column:update_time;type:timestamp; NOT NULL;comment: 更新时间;default:CURRENT_TIMESTAMP"`
 }
 
 func (u *UserAuth) TableName() string {
