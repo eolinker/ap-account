@@ -4,14 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/google/uuid"
 	"gitlab.eolink.com/apinto/aoaccount/service/usage"
 	"gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/auto"
 	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"
-	"strings"
-	"time"
 )
 
 var (
@@ -99,7 +100,7 @@ func (s *imlUserService) Delete(ctx context.Context, ids ...string) error {
 func (s *imlUserService) Search(ctx context.Context, department, keyword string) ([]*User, error) {
 
 	where := make([]string, 0, 2)
-	args := make([]interface{}, 5)
+	args := make([]interface{}, 0, 5)
 	if keyword != "" {
 		kv := fmt.Sprint("%", keyword, "%")
 		where = append(where, "(`name` LIKE ? or email` LIKE ? or `mobile` LIKE ? or `push_token` Like ?)")
@@ -111,6 +112,8 @@ func (s *imlUserService) Search(ctx context.Context, department, keyword string)
 		where = append(where, "not exists (select * from department_member ms where  ms.uid = user_info.uid)")
 	case "disabled":
 		where = append(where, "`status` != 1")
+	case "":
+
 	default:
 		where = append(where, "exists (select * from department_member ms where ms.department = ? and ms.uid = user_info.uid)")
 		args = append(args, department)

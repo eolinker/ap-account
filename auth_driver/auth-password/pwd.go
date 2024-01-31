@@ -7,12 +7,13 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"reflect"
+	"strings"
+
 	"gitlab.eolink.com/apinto/aoaccount/service/account"
 	"gitlab.eolink.com/apinto/common/autowire"
 	"golang.org/x/crypto/pbkdf2"
 	"gorm.io/gorm"
-	"reflect"
-	"strings"
 )
 
 const (
@@ -40,7 +41,7 @@ func init() {
 }
 
 type imlAuthPassword struct {
-	accountService account.IAccountService
+	accountService account.IAccountService `autowired:""`
 }
 
 func (s *imlAuthPassword) Save(ctx context.Context, id string, identifier string, certificate string) error {
