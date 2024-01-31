@@ -6,7 +6,7 @@ import (
 )
 
 type IUserUsageService interface {
-	RemoveUser(ctx context.Context, ids ...string) error
+	OnRemoveUsers(ctx context.Context, ids ...string) error
 }
 
 var (
@@ -27,7 +27,7 @@ func Remove(ctx context.Context, ids ...string) error {
 	lock.Unlock()
 
 	for _, h := range hs {
-		err := h.RemoveUser(ctx, ids...)
+		err := h.OnRemoveUsers(ctx, ids...)
 		if err != nil {
 			return err
 		}

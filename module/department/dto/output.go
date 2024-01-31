@@ -5,7 +5,7 @@ import "gitlab.eolink.com/apinto/common/auto"
 type Department struct {
 	Id       string        `json:"id"`
 	Name     string        `json:"name"`
-	Children []*Department `json:"children"`
+	Children []*Department `json:"children,omitempty"`
 	Number   int           `json:"number"`
 }
 

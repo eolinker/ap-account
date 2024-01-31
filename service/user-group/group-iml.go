@@ -19,7 +19,7 @@ var (
 )
 
 type imlUserGroupService struct {
-	store store.IUserGroupStore
+	store store.IUserGroupStore `autowired:""`
 }
 
 func (s *imlUserGroupService) OnComplete() {
@@ -55,13 +55,13 @@ func (s *imlUserGroupService) Crete(ctx context.Context, id, name string) error 
 }
 
 func (s *imlUserGroupService) Edit(ctx context.Context, id, name string) error {
-	return s.store.Transaction(ctx, func(tx context.Context) error {
-		ov, err := s.store.First(tx, map[string]interface{}{"uuid": id})
+	return s.store.Transaction(ctx, func(ctx context.Context) error {
+		ov, err := s.store.First(ctx, map[string]interface{}{"uuid": id})
 		if err != nil {
 			return err
 		}
 
-		du, err := s.store.FirstQuery(tx, "name <> ? and uuid = ?", []interface{}{name, id}, "id")
+		du, err := s.store.FirstQuery(ctx, "name <> ? and uuid = ?", []interface{}{name, id}, "id")
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 
 			return err
@@ -74,7 +74,7 @@ func (s *imlUserGroupService) Edit(ctx context.Context, id, name string) error {
 		ov.Creator = common.UserId(ctx)
 		ov.CreateTime = time.Now()
 
-		update, err := s.store.Update(tx, ov)
+		update, err := s.store.Update(ctx, ov)
 		if err != nil {
 			return err
 		}

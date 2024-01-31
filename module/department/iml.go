@@ -82,12 +82,12 @@ func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Departm
 	if err != nil {
 		return nil, 0, err
 	}
-	members, err := m.memberService.Members(ctx)
+	members, err := m.memberService.Members(ctx, nil, nil)
 	if err != nil {
 		return nil, 0, err
 	}
 	departmentsMembers := utils.SliceToMapArrayO(members, func(t *department_member.Member) (string, string) {
-		return t.Department, t.User
+		return t.Come, t.UID
 	})
 	nodes := utils.SliceToMapO(list, func(s *department.Department) (string, *Node) {
 		return s.Id, &Node{
@@ -121,13 +121,13 @@ func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Departm
 }
 
 func (m *imlDepartmentModule) AddMember(ctx context.Context, id string, member *department_dto.AddMember) error {
-	return m.memberService.AddMembers(ctx, id, member.UserIds...)
+	return m.memberService.AddMemberTo(ctx, id, member.UserIds...)
 }
 
 func (m *imlDepartmentModule) RemoveMember(ctx context.Context, id string, uid string) error {
-	return m.memberService.RemoveMembers(ctx, id, uid)
+	return m.memberService.RemoveMemberFrom(ctx, id, uid)
 }
 
 func (m *imlDepartmentModule) RemoveMembers(ctx context.Context, id string, members *department_dto.RemoveMember) error {
-	return m.memberService.RemoveMembers(ctx, id, members.UserIds...)
+	return m.memberService.RemoveMemberFrom(ctx, id, members.UserIds...)
 }

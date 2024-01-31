@@ -3,6 +3,8 @@ package member
 import (
 	"context"
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
+	department_member "gitlab.eolink.com/apinto/aoaccount/service/department-member"
+	"gitlab.eolink.com/apinto/aoaccount/service/member"
 	"gitlab.eolink.com/apinto/aoaccount/service/user"
 	user_group "gitlab.eolink.com/apinto/aoaccount/service/user-group"
 	"gitlab.eolink.com/apinto/common/auto"
@@ -20,25 +22,47 @@ type IMemberModule interface {
 }
 
 type imlMemberModule struct {
-	memberService user_group.IUserGroupMemberService `autowired:""`
-	userService   user.IUserService                  `autowired:""`
+	memberService           user_group.IUserGroupMemberService `autowired:""`
+	departmentMemberService department_member.IMemberService   `autowired:""`
+	userService             user.IUserService                  `autowired:""`
 }
 
 func (m *imlMemberModule) UserGroupMember(ctx context.Context, groupId ...string) ([]*user_dto.UserInfo, error) {
 
-	members, err := m.memberService.Members(ctx, groupId...)
+	members, err := m.memberService.Members(ctx, groupId, nil)
 	if err != nil {
 		return nil, err
 	}
-	userids := utils.SliceToSlice(members, func(s *user_group.Member) string {
-		return s.UserId
+
+	userids := utils.SliceToSlice(members, member.UserID, func(m *member.Member) bool {
+		return m.Come != ""
 	})
 
+	if len(userids) == 0 {
+		return nil, nil
+	}
 	users, err := m.userService.Get(ctx, userids...)
 	if err != nil {
 		return nil, err
 	}
 	result := utils.SliceToSlice(users, user_dto.CreateUserInfoFromModel)
+
+	groups, err := m.memberService.FilterMembersForUser(ctx, userids...)
+	if err != nil {
+		return nil, err
+	}
+	memberMap := utils.SliceToMapArrayO(utils.SliceToSlice(members, func(s *member.Member) *member.Member {
+		return s
+	}, func(m *member.Member) bool {
+		return m.Come != ""
+	}), func(t *member.Member) (string, string) {
+		return t.UID, t.Come
+	})
+	for _, r := range result {
+		r.Department = auto.List(memberMap[r.Uid])
+		r.UserGroups = auto.List(groups[r.Uid])
+	}
+	auto.CompleteLabels(ctx, result)
 	auto.CompleteLabels(ctx, result)
 	return result, nil
 }

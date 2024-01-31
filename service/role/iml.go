@@ -50,15 +50,15 @@ func (s *imlRoleService) List(ctx context.Context) ([]*Role, error) {
 func (s *imlRoleService) Save(ctx context.Context, id string, name string) error {
 	operator := common.UserId(ctx)
 
-	return s.store.Transaction(ctx, func(txCtx context.Context) error {
-		v, err := s.store.First(txCtx, map[string]interface{}{"uuid": id})
+	return s.store.Transaction(ctx, func(ctx context.Context) error {
+		v, err := s.store.First(ctx, map[string]interface{}{"uuid": id})
 		if err != nil {
 			return err
 		}
 		if v.Name == name {
 			return nil
 		}
-		_, err = s.store.First(txCtx, map[string]interface{}{"name": name})
+		_, err = s.store.First(ctx, map[string]interface{}{"name": name})
 		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("role already exist")
 		}
@@ -69,7 +69,7 @@ func (s *imlRoleService) Save(ctx context.Context, id string, name string) error
 		v.Creator = operator
 		v.CreateTime = time.Now()
 
-		return s.store.Save(txCtx, v)
+		return s.store.Save(ctx, v)
 
 	})
 
@@ -84,8 +84,8 @@ func (s *imlRoleService) Create(ctx context.Context, id string, name string) err
 		Creator:    operator,
 		CreateTime: time.Now(),
 	}
-	return s.store.Transaction(ctx, func(txCtx context.Context) error {
-		ov, err := s.store.FirstQuery(txCtx, "`uuid` = ? or `name`=?", []interface{}{id, name}, "id")
+	return s.store.Transaction(ctx, func(ctx context.Context) error {
+		ov, err := s.store.FirstQuery(ctx, "`uuid` = ? or `name`=?", []interface{}{id, name}, "id")
 		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
 		}

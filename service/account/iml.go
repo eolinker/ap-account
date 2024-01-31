@@ -21,7 +21,7 @@ type imlAccountService struct {
 }
 
 func (s *imlAccountService) Save(ctx context.Context, driver string, uid string, identifier string, certificate string) error {
-	return s.store.Transaction(ctx, func(txCtx context.Context) error {
+	return s.store.Transaction(ctx, func(ctx context.Context) error {
 		ov, err := s.store.First(ctx, map[string]interface{}{
 			"driver": driver,
 			"uid":    uid,
@@ -39,11 +39,11 @@ func (s *imlAccountService) Save(ctx context.Context, driver string, uid string,
 				CreateTime:  time.Now(),
 				UpdateTime:  time.Now(),
 			}
-			return s.store.Insert(txCtx, ov)
+			return s.store.Insert(ctx, ov)
 		}
 		ov.Certificate = certificate
 		ov.Identifier = identifier
-		updated, err := s.store.Update(txCtx, ov)
+		updated, err := s.store.Update(ctx, ov)
 		if err != nil {
 			return err
 		}
@@ -75,7 +75,7 @@ func (s *imlAccountService) GetIdentifier(ctx context.Context, driver string, id
 	return createUser(v), nil
 }
 
-func (s *imlAccountService) RemoveUser(ctx context.Context, ids ...string) error {
+func (s *imlAccountService) OnRemoveUsers(ctx context.Context, ids ...string) error {
 	if len(ids) == 0 {
 		return nil
 	}

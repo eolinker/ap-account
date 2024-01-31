@@ -1,6 +1,5 @@
 package department_member
 
-type Member struct {
-	User       string
-	Department string
-}
+import "gitlab.eolink.com/apinto/aoaccount/service/member"
+
+type Member = member.Member

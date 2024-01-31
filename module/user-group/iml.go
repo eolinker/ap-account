@@ -3,6 +3,7 @@ package user_group
 import (
 	"context"
 	user_group_dto "gitlab.eolink.com/apinto/aoaccount/module/user-group/dto"
+	"gitlab.eolink.com/apinto/aoaccount/service/member"
 	user_group "gitlab.eolink.com/apinto/aoaccount/service/user-group"
 	"gitlab.eolink.com/apinto/common/auto"
 	"gitlab.eolink.com/apinto/common/utils"
@@ -18,11 +19,11 @@ type imlUserGroupModule struct {
 }
 
 func (m *imlUserGroupModule) AddMember(ctx context.Context, id string, member *user_group_dto.AddMember) error {
-	return m.memberService.AddGroup(ctx, id, member.Users...)
+	return m.memberService.AddMemberTo(ctx, id, member.Users...)
 }
 
 func (m *imlUserGroupModule) RemoveMember(ctx context.Context, id string, uid string) error {
-	return m.memberService.RemoveGroup(ctx, id, uid)
+	return m.memberService.RemoveMemberFrom(ctx, id, uid)
 }
 
 func (m *imlUserGroupModule) Get(ctx context.Context, id string) (*user_group_dto.UserGroup, error) {
@@ -45,13 +46,11 @@ func (m *imlUserGroupModule) List(ctx context.Context) ([]*user_group_dto.UserGr
 		return nil, err
 	}
 
-	members, err := m.memberService.Members(ctx)
+	members, err := m.memberService.Members(ctx, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	mbsMap := utils.SliceToMapArray(members, func(t *user_group.Member) string {
-		return t.GroupId
-	})
+	mbsMap := utils.SliceToMapArray(members, member.Cid)
 	result := utils.SliceToSlice(list, func(s *user_group.UserGroup) *user_group_dto.UserGroup {
 		return &user_group_dto.UserGroup{
 			Id:         s.Id,

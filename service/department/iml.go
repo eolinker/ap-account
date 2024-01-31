@@ -3,7 +3,7 @@ package department
 import (
 	"context"
 	"errors"
-	store2 "gitlab.eolink.com/apinto/aoaccount/store"
+	store "gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/auto"
 	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"
@@ -15,8 +15,8 @@ var (
 )
 
 type imlDepartmentService struct {
-	departmentStore store2.DepartmentStore       `autowired:""`
-	membersStore    store2.DepartmentMemberStore `autowired:""`
+	departmentStore store.DepartmentStore       `autowired:""`
+	membersStore    store.DepartmentMemberStore `autowired:""`
 }
 
 func (s *imlDepartmentService) OnComplete() {
@@ -29,7 +29,7 @@ func (s *imlDepartmentService) GetLabels(ctx context.Context, ids ...string) map
 	if err != nil {
 		return map[string]string{}
 	}
-	return utils.SliceToMapO(departments, func(t *store2.Department) (string, string) {
+	return utils.SliceToMapO(departments, func(t *store.Department) (string, string) {
 		return t.UUID, t.Name
 	})
 
@@ -50,9 +50,7 @@ func (s *imlDepartmentService) Delete(ctx context.Context, id string) error {
 		if v == nil {
 			return errors.New("department not found")
 		}
-		_, err = s.membersStore.DeleteWhere(ctx, map[string]interface{}{
-			"department": id,
-		})
+		err = s.membersStore.Delete(ctx, id)
 		if err != nil {
 			return err
 		}
@@ -95,7 +93,7 @@ func (s *imlDepartmentService) Create(ctx context.Context, id string, name, pare
 		return errors.New("department is already exists")
 	}
 
-	err = s.departmentStore.Insert(ctx, &store2.Department{
+	err = s.departmentStore.Insert(ctx, &store.Department{
 		Id:         0,
 		UUID:       id,
 		Name:       name,

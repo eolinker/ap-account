@@ -6,6 +6,8 @@ import (
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
 	department_member "gitlab.eolink.com/apinto/aoaccount/service/department-member"
 	"gitlab.eolink.com/apinto/aoaccount/service/user"
+	user_group "gitlab.eolink.com/apinto/aoaccount/service/user-group"
+	"gitlab.eolink.com/apinto/common/auto"
 	"gitlab.eolink.com/apinto/common/store"
 	"gitlab.eolink.com/apinto/common/utils"
 )
@@ -19,10 +21,11 @@ const (
 )
 
 type imlUserModule struct {
-	userService   user.IUserService                `autowired:""`
-	memberService department_member.IMemberService `autowired:""`
-	authPassword  auth_password.AuthPassword       `autowired:""`
-	transaction   store.ITransaction               `autowired:""`
+	userService             user.IUserService                  `autowired:""`
+	departmentMemberService department_member.IMemberService   `autowired:""`
+	authPassword            auth_password.AuthPassword         `autowired:""`
+	userGroupsMemberService user_group.IUserGroupMemberService `autowired:""`
+	transaction             store.ITransaction                 `autowired:""`
 }
 
 func (s *imlUserModule) CountStatus(ctx context.Context, enable bool) (int, error) {
@@ -44,13 +47,34 @@ func (s *imlUserModule) Search(ctx context.Context, department string, keyword s
 	if err != nil {
 		return nil, err
 	}
+	if len(list) == 0 {
+		return nil, nil
+	}
 	result := utils.SliceToSlice(list, user_dto.CreateUserInfoFromModel)
+	userIds := utils.SliceToSlice(list, func(m *user.User) string {
+		return m.UID
+	})
+	members, err := s.departmentMemberService.FilterMembersForUser(ctx, userIds...)
+	if err != nil {
+		return nil, err
+	}
+	groups, err := s.userGroupsMemberService.FilterMembersForUser(ctx, userIds...)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, r := range result {
+		r.Department = auto.List(members[r.Uid])
+		r.UserGroups = auto.List(groups[r.Uid])
+	}
+	auto.CompleteLabels(ctx, result)
 	return result, nil
 }
 
 func (s *imlUserModule) AddForPassword(ctx context.Context, user *user_dto.CreateUser) (string, error) {
 	newId := ""
-	err := s.transaction.Transaction(ctx, func(txCtx context.Context) error {
+
+	err := s.transaction.Transaction(ctx, func(ctx context.Context) error {
 		newUser, err := s.userService.Create(ctx, "", user.Name, user.Email, user.Mobile)
 		if err != nil {
 			return err
@@ -63,7 +87,10 @@ func (s *imlUserModule) AddForPassword(ctx context.Context, user *user_dto.Creat
 
 		if len(user.Departments) > 0 {
 			for _, department := range user.Departments {
-				_ = s.memberService.AddMembers(ctx, department, newUser.UID)
+				err := s.departmentMemberService.AddMemberTo(ctx, department, newUser.UID)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		newId = newUser.UID

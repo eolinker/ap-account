@@ -2,6 +2,8 @@ package user_group
 
 import (
 	"context"
+	"gitlab.eolink.com/apinto/aoaccount/service/member"
+	"gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/autowire"
 	"reflect"
 )
@@ -18,17 +20,13 @@ type IUserGroupService interface {
 	GetList(ctx context.Context) ([]*UserGroup, error)
 }
 
-type IUserGroupMemberService interface {
-	AddGroup(ctx context.Context, groupID string, userids ...string) error
-	RemoveGroup(ctx context.Context, groupID, userID string) error
-	Members(ctx context.Context, gids ...string) ([]*Member, error)
-}
+type IUserGroupMemberService member.IMemberService
 
 func init() {
 	autowire.Auto[IUserGroupService](func() reflect.Value {
 		return reflect.ValueOf(new(imlUserGroupService))
 	})
 	autowire.Auto[IUserGroupMemberService](func() reflect.Value {
-		return reflect.ValueOf(new(imlUserMemberService))
+		return reflect.ValueOf(new(member.Service[store.IUserGroupMemberStore]))
 	})
 }
