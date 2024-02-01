@@ -53,11 +53,16 @@ func (s *imlSession) Check(ctx context.Context, sessionKey string) (Status, stri
 	if err != nil {
 		return NotLogin, ""
 	}
+	if sv == nil {
+		return NotLogin, ""
+	}
 
 	if sv.ExpireTime < time.Now().Unix() {
 		return Expired, ""
 	}
-
+	if !sv.Valid {
+		return NotLogin, ""
+	}
 	if sv.UID == "" {
 		return NotLogin, ""
 	}
@@ -81,6 +86,7 @@ func (s *imlSession) CreateSession(ctx context.Context, uid string) (string, err
 		UID:        uid,
 		LoginTime:  time.Now().Unix(),
 		ExpireTime: time.Now().Add(ExpireTime).Unix(),
+		Valid:      true,
 	})
 	if err != nil {
 		return "", err
