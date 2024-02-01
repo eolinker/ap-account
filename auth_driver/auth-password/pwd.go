@@ -1,6 +1,7 @@
 package auth_password
 
 import (
+	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/sha512"
@@ -8,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"gitlab.eolink.com/apinto/aoaccount/service/account"
@@ -17,10 +19,10 @@ import (
 )
 
 const (
-	DriverName = `auth_password`
-	saltLen    = 16
-	iterations = 1000
-	keyLength  = 32
+	DriverName        = `auth_password`
+	defaultSaltLen    = 16
+	defaultIterations = 1000
+	defaultKeyLength  = 32
 )
 
 var (
@@ -59,10 +61,6 @@ func (s *imlAuthPassword) Save(ctx context.Context, id string, identifier string
 
 func (s *imlAuthPassword) Login(ctx context.Context, identifier string, certificate string) (string, error) {
 
-	secret, err := hashSecret([]byte(certificate))
-	if err != nil {
-		return "", err
-	}
 	auth, err := s.accountService.GetIdentifier(ctx, DriverName, identifier)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -70,22 +68,62 @@ func (s *imlAuthPassword) Login(ctx context.Context, identifier string, certific
 		}
 		return "", err
 	}
-	if strings.EqualFold(secret, auth.Certificate) {
+	if checkPasswordHash(certificate, auth.Certificate) {
 		return auth.Uid, nil
 	}
+
 	return "", ErrorInvalidPassword
 }
 func hashSecret(secret []byte) (string, error) {
-	salt, err := generateRandomSalt(saltLen)
+	salt, err := generateRandomSalt(defaultSaltLen)
 	if err != nil {
 		return "", err
 	}
 
 	// 使用 PBKDF2 密钥派生函数
-	key := pbkdf2.Key(secret, salt, iterations, keyLength, sha512.New)
-	return fmt.Sprintf("$pbkdf2-sha512$i=%d,l=%d$%s$%s", iterations, keyLength, base64.RawStdEncoding.EncodeToString(salt), base64.RawStdEncoding.EncodeToString(key)), nil
+	key := pbkdf2.Key(secret, salt, defaultIterations, defaultKeyLength, sha512.New)
+	return fmt.Sprintf("$pbkdf2-sha512$i=%d,l=%d$%s$%s", defaultIterations, defaultKeyLength, base64.RawStdEncoding.EncodeToString(salt), base64.RawStdEncoding.EncodeToString(key)), nil
 }
+func checkPasswordHash(password, hash string) bool {
+	iterations, keyLength, salt, key, err := readPbkdf2Hash(hash)
+	if err != nil {
+		return false
+	}
+	secret := pbkdf2.Key([]byte(password), salt, iterations, keyLength, sha512.New)
+	return bytes.Equal(key, secret)
+}
+func readPbkdf2Hash(hash string) (int, int, []byte, []byte, error) {
+	fl := strings.FieldsFunc(hash, func(r rune) bool {
+		if r == '$' || r == '=' || r == ',' || r == '-' {
+			return true
+		}
+		return false
+	})
+	if len(fl) != 8 || fl[0] != "pbkdf2" {
+		return 0, 0, nil, nil, errors.New("invalid hash")
+	}
+	if fl[1] != "sha512" {
+		return 0, 0, nil, nil, errors.New("not support hash")
+	}
 
+	iterations, err := strconv.Atoi(fl[3])
+	if err != nil {
+		return 0, 0, nil, nil, fmt.Errorf("invalid iterations: %v", err)
+	}
+	keyLength, err := strconv.Atoi(fl[5])
+	if err != nil {
+		return 0, 0, nil, nil, fmt.Errorf("invalid key length: %v", err)
+	}
+	salt, err := base64.RawStdEncoding.DecodeString(fl[6])
+	if err != nil {
+		return 0, 0, nil, nil, fmt.Errorf("invalid salt: %v", err)
+	}
+	key, err := base64.RawStdEncoding.DecodeString(fl[7])
+	if err != nil {
+		return 0, 0, nil, nil, fmt.Errorf("invalid key: %v", err)
+	}
+	return iterations, keyLength, salt, key, nil
+}
 func generateRandomSalt(length int) ([]byte, error) {
 	// Create a byte slice with the specified length
 	salt := make([]byte, length)

@@ -1,6 +1,7 @@
 package plugin
 
 import (
+	"gitlab.eolink.com/apinto/aoaccount/controller/account"
 	"gitlab.eolink.com/apinto/aoaccount/controller/department"
 	"gitlab.eolink.com/apinto/aoaccount/controller/role"
 	user_group "gitlab.eolink.com/apinto/aoaccount/controller/user-group"
@@ -9,7 +10,8 @@ import (
 )
 
 var (
-	_ pm3.IPlugin = (*plugin)(nil)
+	_ pm3.IPlugin           = (*plugin)(nil)
+	_ pm3.IPluginMiddleware = (*plugin)(nil)
 )
 
 type plugin struct {
@@ -18,6 +20,13 @@ type plugin struct {
 	userGroupController  user_group.IUserGroupController  `autowired:""`
 	departmentController department.IDepartmentController `autowired:""`
 	userController       users.IUserController            `autowired:""`
+	accountController    account.IAccountController       `autowired:""`
+}
+
+func (p *plugin) Middlewares() []pm3.IMiddleware {
+	return []pm3.IMiddleware{
+		p.accountController,
+	}
 }
 
 func (p *plugin) APis() []pm3.Api {
@@ -32,5 +41,6 @@ func (p *plugin) OnComplete() {
 	p.apis = append(p.apis, p.getUserGroupAPIs()...)
 	p.apis = append(p.apis, p.getDepartmentApis()...)
 	p.apis = append(p.apis, p.getUsersApis()...)
+	p.apis = append(p.apis, p.getAccountApis()...)
 
 }
