@@ -28,6 +28,27 @@ type imlUserModule struct {
 	transaction             store.ITransaction                 `autowired:""`
 }
 
+func (s *imlUserModule) OnComplete() {
+	ctx := context.Background()
+	users, err := s.userService.Get(ctx, "admin")
+	if err != nil {
+		return
+	}
+	if len(users) == 0 {
+		err := s.transaction.Transaction(ctx, func(ctx context.Context) error {
+			create, err := s.userService.Create(ctx, "admin", "admin", "", "")
+			if err != nil {
+				return err
+			}
+			return s.authPassword.Save(ctx, create.UID, "admin", defaultInitPassword)
+
+		})
+		if err != nil {
+			panic("init admin error: " + err.Error())
+		}
+	}
+}
+
 func (s *imlUserModule) CountStatus(ctx context.Context, enable bool) (int, error) {
 	status := 0
 	if enable {
