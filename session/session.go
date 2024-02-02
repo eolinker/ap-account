@@ -66,7 +66,7 @@ func (s *imlSession) Check(ctx context.Context, sessionKey string) (Status, stri
 	if sv.UID == "" {
 		return NotLogin, ""
 	}
-
+	// 增加过期时间
 	sv.ExpireTime = time.Now().Add(ExpireTime).Unix()
 	_ = s.sessionCache.Set(ctx, sessionKey, sv)
 

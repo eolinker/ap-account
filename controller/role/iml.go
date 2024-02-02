@@ -11,7 +11,7 @@ var (
 )
 
 type imlRoleController struct {
-	module role.IRoleModule
+	module role.IRoleModule `autowired:""`
 }
 
 func (c *imlRoleController) Get(ctx *gin.Context, id string) (*role_dto.Role, error) {

@@ -16,8 +16,8 @@ const MiddlewareName = "login"
 var (
 	_ ILoginCheck = (*imlLoginCheck)(nil)
 
-	notLogin      = []byte(`{"code":403,"message":"not login"}`)
-	sessionExpire = []byte(`{"code":403,"message":"not login"}`)
+	notLogin      = []byte(`{"code":401,"msg":"not login"}`)
+	sessionExpire = []byte(`{"code":401,"msg":"not login"}`)
 )
 
 func init() {
@@ -56,7 +56,7 @@ func (m *imlLoginCheck) Check(method string, path string) bool {
 }
 func NotLoginResponse(ctx *gin.Context) {
 
-	ctx.Data(http.StatusForbidden, "application/json", notLogin)
+	ctx.Data(http.StatusUnauthorized, "application/json", notLogin)
 	ctx.Abort()
 
 }
@@ -78,7 +78,7 @@ func (m *imlLoginCheck) Handler(ginCtx *gin.Context) {
 		return
 	case session.Expired:
 		if notIgnore {
-			ginCtx.Data(http.StatusForbidden, "application/json", sessionExpire)
+			ginCtx.Data(http.StatusUnauthorized, "application/json", sessionExpire)
 			ginCtx.Abort()
 		}
 

@@ -69,11 +69,11 @@ func (m *imlRoleModule) List(ctx context.Context) ([]*role_dto.Role, error) {
 	}
 	out := utils.SliceToSlice(list, func(s *role.Role) *role_dto.Role {
 		return &role_dto.Role{
-			Id:         "",
-			Name:       "",
-			Usage:      0,
-			Creator:    auto.Label{},
-			CreateTime: auto.TimeLabel{},
+			Id:   s.Id,
+			Name: s.Name,
+			//Usage:      s.Usage,
+			Creator:    auto.UUID(s.Creator),
+			CreateTime: auto.TimeLabel(s.CreateTime),
 		}
 	})
 	auto.CompleteLabels(ctx, out)
