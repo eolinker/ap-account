@@ -2,6 +2,8 @@ package member
 
 import (
 	"context"
+	"reflect"
+
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
 	department_member "gitlab.eolink.com/apinto/aoaccount/service/department-member"
 	"gitlab.eolink.com/apinto/aoaccount/service/member"
@@ -10,7 +12,6 @@ import (
 	"gitlab.eolink.com/apinto/common/auto"
 	"gitlab.eolink.com/apinto/common/autowire"
 	"gitlab.eolink.com/apinto/common/utils"
-	"reflect"
 )
 
 var (
@@ -62,8 +63,6 @@ func (m *imlMemberModule) UserGroupMember(ctx context.Context, groupId ...string
 		r.Department = auto.List(memberMap[r.Uid])
 		r.UserGroups = auto.List(groups[r.Uid])
 	}
-	auto.CompleteLabels(ctx, result)
-	auto.CompleteLabels(ctx, result)
 	return result, nil
 }
 

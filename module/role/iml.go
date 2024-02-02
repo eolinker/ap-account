@@ -2,6 +2,7 @@ package role
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	role_dto "gitlab.eolink.com/apinto/aoaccount/module/role/dto"
 	"gitlab.eolink.com/apinto/aoaccount/service/role"
@@ -76,6 +77,5 @@ func (m *imlRoleModule) List(ctx context.Context) ([]*role_dto.Role, error) {
 			CreateTime: auto.TimeLabel(s.CreateTime),
 		}
 	})
-	auto.CompleteLabels(ctx, out)
 	return out, nil
 }

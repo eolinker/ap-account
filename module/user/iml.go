@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	auth_password "gitlab.eolink.com/apinto/aoaccount/auth_driver/auth-password"
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
 	department_member "gitlab.eolink.com/apinto/aoaccount/service/department-member"
@@ -92,7 +93,6 @@ func (s *imlUserModule) Search(ctx context.Context, department string, keyword s
 		r.Department = auto.List(members[r.Uid])
 		r.UserGroups = auto.List(groups[r.Uid])
 	}
-	auto.CompleteLabels(ctx, result)
 	return result, nil
 }
 
