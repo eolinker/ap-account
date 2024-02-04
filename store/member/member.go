@@ -3,10 +3,11 @@ package member
 import (
 	"context"
 	"fmt"
-	"gitlab.eolink.com/apinto/common/store"
-	"gorm.io/gorm/clause"
 	"strings"
 	"time"
+
+	"gitlab.eolink.com/apinto/common/store"
+	"gorm.io/gorm/clause"
 )
 
 var (
@@ -81,7 +82,7 @@ func (s *Store) Members(ctx context.Context, comes []string, users []string) ([]
 		where = append(where, "user_info.uid in (?)")
 		args = append(args, users)
 	}
-	tdb := s.db.DB(ctx).Table("user_info").Select("user_info.uid as uid,member.come as come").
+	tdb := s.db.DB(ctx).Table("user_info").Select("user_info.uid as uid,member.come as come,member.create_time as create_time").
 		Joins(s.joins)
 
 	if len(where) > 0 {
