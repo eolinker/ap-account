@@ -31,6 +31,44 @@ type imlUserModule struct {
 	transaction             store.ITransaction                 `autowired:""`
 }
 
+func (s *imlUserModule) Simple(ctx context.Context, keyword string) ([]*user_dto.UserSimple, error) {
+	list, err := s.userService.Search(ctx, "", keyword)
+	if err != nil {
+		return nil, err
+	}
+	if len(list) == 0 {
+		return nil, nil
+	}
+	result := utils.SliceToSlice(list, func(s *user.User) *user_dto.UserSimple {
+		return &user_dto.UserSimple{
+			Uid:        s.UID,
+			Name:       s.Username,
+			Email:      s.Email,
+			Department: nil,
+			UserGroups: nil,
+		}
+	}, func(u *user.User) bool {
+		return u.Status == 1
+	})
+	userIds := utils.SliceToSlice(list, func(m *user.User) string {
+		return m.UID
+	})
+	members, err := s.departmentMemberService.FilterMembersForUser(ctx, userIds...)
+	if err != nil {
+		return nil, err
+	}
+	groups, err := s.userGroupsMemberService.FilterMembersForUser(ctx, userIds...)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, r := range result {
+		r.Department = auto.List(members[r.Uid])
+		r.UserGroups = auto.List(groups[r.Uid])
+	}
+	return result, nil
+}
+
 func (s *imlUserModule) OnComplete() {
 	register.Handle(func(v server.Server) {
 		ctx := context.Background()

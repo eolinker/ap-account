@@ -12,6 +12,10 @@ type imlUserController struct {
 	module user.IUserModule `autowired:""`
 }
 
+func (c *imlUserController) Simple(ctx *gin.Context, keyword string) ([]*user_dto.UserSimple, error) {
+	return c.module.Simple(ctx, keyword)
+}
+
 func (c *imlUserController) Search(ctx *gin.Context, department string, keyword string) ([]*user_dto.UserInfo, error) {
 	return c.module.Search(ctx, department, keyword)
 }

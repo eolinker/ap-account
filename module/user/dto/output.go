@@ -14,6 +14,14 @@ type UserInfo struct {
 	UserGroups []auto.Label `json:"user_group" aolabel:"user_group"`
 }
 
+type UserSimple struct {
+	Uid        string       `json:"id"`
+	Name       string       `json:"name"`
+	Email      string       `json:"email"`
+	Department []auto.Label `json:"department" aolabel:"department"`
+	UserGroups []auto.Label `json:"user_group" aolabel:"user_group"`
+}
+
 func CreateUserInfoFromModel(m *user.User) *UserInfo {
 	dto := &UserInfo{
 		Uid:        m.UID,

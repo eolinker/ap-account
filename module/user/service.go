@@ -9,6 +9,7 @@ import (
 
 type IUserModule interface {
 	Search(ctx context.Context, department string, keyword string) ([]*user_dto.UserInfo, error)
+	Simple(ctx context.Context, keyword string) ([]*user_dto.UserSimple, error)
 	AddForPassword(ctx context.Context, user *user_dto.CreateUser) (string, error)
 	Disable(ctx context.Context, user *user_dto.Disable) error
 	Enable(ctx context.Context, user *user_dto.Enable) error
