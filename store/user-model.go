@@ -8,8 +8,8 @@ type UserAuth struct {
 	Driver      string    `gorm:"column:driver;type:VARCHAR(20);NOT NULL;comment: 登录类型;uniqueIndex:only;index:driver;"`
 	Identifier  string    `gorm:"column:identifier;type:VARCHAR(255);NOT NULL; comment:手机号 邮箱 用户名或第三方应用的唯一标识;uniqueIndex:only"`
 	Certificate string    `gorm:"column:certificate;type:VARCHAR(512);NOT NULL;comment: 密码凭证，站内的保存密码，站外的不保存或保存token;"`
-	CreateTime  time.Time `gorm:"column:create_time;type:timestamp; NOT NULL; comment:创建时间;"`
-	UpdateTime  time.Time `gorm:"column:update_time;type:timestamp; NOT NULL;comment: 更新时间;default:CURRENT_TIMESTAMP"`
+	CreateTime  time.Time `gorm:"column:create_at;type:timestamp; NOT NULL; comment:创建时间;"`
+	UpdateTime  time.Time `gorm:"column:update_at;type:timestamp; NOT NULL;comment: 更新时间;default:CURRENT_TIMESTAMP"`
 }
 
 func (u *UserAuth) TableName() string {
@@ -29,7 +29,7 @@ type UserInfo struct {
 	Mobile    string    `gorm:"column:mobile;type:VARCHAR(16);NOT NULL;comment: 手机号;"`
 	Email     string    `gorm:"column:email;type:VARCHAR(100);NOT NULL;comment: 邮箱;"`
 	CreateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP;column:create_at;comment:创建时间"`
-	UpdateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;column:update_at;comment:修改时间" json:"update_time"`
+	UpdateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;column:update_at;comment:修改时间" json:"update_at"`
 	PushToken string    `gorm:"column:push_token;type:VARCHAR(50);NOT NULL;comment: 推送token;"`
 	IsDeleted bool      `gorm:"type:tinyint(1);not null;column:is_delete;comment:是否删除"`
 }
@@ -84,7 +84,7 @@ type UserInfoUpdateLog struct {
 	AttributeOldVal string    `gorm:"column:attribute_old_val;type:VARCHAR(30);NOT NULL;comment: 属性旧值"`
 	AttributeNewVal string    `gorm:"column:attribute_new_val;type:VARCHAR(30);NOT NULL;comment: 属性新值"`
 	Operator        string    `gorm:"column:operator;type:VARCHAR(36);NOT NULL;comment: 操作人"`
-	UpdateTime      time.Time `gorm:"column:update_time;type:timestamp;NOT NULL;comment: 更新时间"`
+	UpdateTime      time.Time `gorm:"column:update_at;type:timestamp;NOT NULL;comment: 更新时间"`
 }
 
 func (u *UserInfoUpdateLog) TableName() string {

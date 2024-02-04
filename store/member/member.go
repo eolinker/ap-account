@@ -17,7 +17,7 @@ type Member struct {
 	Id         int64     `gorm:"column:id;type:BIGINT(20);AUTO_INCREMENT;NOT NULL;comment:id;primary_key;"`
 	Come       string    `gorm:"column:come;type:VARCHAR(36);NOT NULL;comment: 归属id;index:department;uniqueIndex:department_uid;"`
 	Uid        string    `gorm:"column:uid;type:VARCHAR(36);NOT NULL;comment: 用户id;index:uid;uniqueIndex:department_uid;"`
-	CreateTime time.Time `gorm:"column:create_time;type:timestamp;NOT NULL; comment: 创建时间"`
+	CreateTime time.Time `gorm:"column:create_at;type:timestamp;NOT NULL; comment: 创建时间"`
 }
 
 type IMemberStore interface {
