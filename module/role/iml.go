@@ -51,7 +51,7 @@ func (m *imlRoleModule) Edit(ctx context.Context, id string, input *role_dto.Edi
 }
 
 func (m *imlRoleModule) Simple(ctx context.Context, keyword string) ([]*role_dto.Simple, error) {
-	list, err := m.service.List(ctx)
+	list, err := m.service.Search(ctx, keyword)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (m *imlRoleModule) Simple(ctx context.Context, keyword string) ([]*role_dto
 }
 
 func (m *imlRoleModule) List(ctx context.Context) ([]*role_dto.Role, error) {
-	list, err := m.service.List(ctx)
+	list, err := m.service.Search(ctx, "")
 	if err != nil {
 		return nil, err
 	}

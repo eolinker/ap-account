@@ -40,7 +40,15 @@ func (s *imlRoleService) Get(ctx context.Context, id string) (*Role, error) {
 }
 
 func (s *imlRoleService) Search(ctx context.Context, keyword string) ([]*Role, error) {
-	list, err := s.store.ListQuery(ctx, "`name` like ?", []interface{}{"%" + keyword + "%"}, "name asc")
+
+	if keyword != "" {
+		list, err := s.store.ListQuery(ctx, "`name` like ?", []interface{}{"%" + keyword + "%"}, "name asc")
+		if err != nil {
+			return nil, err
+		}
+		return utils.SliceToSlice(list, CreateModel), nil
+	}
+	list, err := s.store.ListQuery(ctx, "", []interface{}{}, "name asc")
 	if err != nil {
 		return nil, err
 	}

@@ -115,7 +115,7 @@ func (s *imlUserService) Search(ctx context.Context, department, keyword string)
 	case "":
 
 	default:
-		where = append(where, "exists (select * from department_member ms where ms.department = ? and ms.uid = user_info.uid)")
+		where = append(where, "exists (select * from department_member ms where ms.come = ? and ms.uid = user_info.uid)")
 		args = append(args, department)
 	}
 
