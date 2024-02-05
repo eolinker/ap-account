@@ -8,8 +8,8 @@ import (
 func (p *plugin) getUserGroupAPIs() []pm3.Api {
 	return []pm3.Api{
 		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/user/groups", []string{"context"}, []string{"user_groups"}, p.userGroupController.List),
-		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/user/group", []string{"context", "query:id"}, []string{"user-group"}, p.userGroupController.Get),
-		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/user/group/:id", []string{"context", "path:id"}, []string{"user-group"}, p.userGroupController.Get),
+		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/user/group", []string{"context", "query:id"}, []string{"user_group"}, p.userGroupController.Get),
+		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/user/group/:id", []string{"context", "path:id"}, []string{"user_group"}, p.userGroupController.Get),
 		pm3.CreateApiWidthDoc(http.MethodPost, "/api/v1/user/group", []string{"context", "query:id", "body"}, []string{}, p.userGroupController.Create),
 		pm3.CreateApiWidthDoc(http.MethodPut, "/api/v1/user/group/:id", []string{"context", "path:id", "body"}, []string{}, p.userGroupController.Save),
 		pm3.CreateApiWidthDoc(http.MethodPut, "/api/v1/user/group", []string{"context", "query:id", "body"}, []string{}, p.userGroupController.Save),
