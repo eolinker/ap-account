@@ -75,7 +75,7 @@ func (s *imlUserService) Create(ctx context.Context, id string, name string, ema
 
 func (s *imlUserService) SetStatus(ctx context.Context, status int, ids ...string) error {
 
-	rows, err := s.store.UpdateField(ctx, "status", status, "`uid` in(?)", ids)
+	rows, err := s.store.UpdateField(ctx, "status", status, "`uid` in(?)", []interface{}{ids})
 	if err != nil {
 		return err
 	}
