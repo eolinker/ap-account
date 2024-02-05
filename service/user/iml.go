@@ -103,7 +103,7 @@ func (s *imlUserService) Search(ctx context.Context, department, keyword string)
 	args := make([]interface{}, 0, 5)
 	if keyword != "" {
 		kv := fmt.Sprint("%", keyword, "%")
-		where = append(where, "(`name` LIKE ? or email` LIKE ? or `mobile` LIKE ? or `push_token` Like ?)")
+		where = append(where, "(`name` LIKE ? or `email` LIKE ? or `mobile` LIKE ? or `push_token` Like ?)")
 		args = append(args, kv, kv, kv, kv)
 
 	}
