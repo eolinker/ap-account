@@ -2,6 +2,7 @@ package user_group
 
 import (
 	"context"
+	"github.com/google/uuid"
 	user_group_dto "gitlab.eolink.com/apinto/aoaccount/module/user-group/dto"
 	"gitlab.eolink.com/apinto/aoaccount/service/member"
 	user_group "gitlab.eolink.com/apinto/aoaccount/service/user-group"
@@ -68,6 +69,9 @@ func (m *imlUserGroupModule) List(ctx context.Context) ([]*user_group_dto.UserGr
 // ctx context.Context, id string, input *user_group_dto.Create
 // error
 func (m *imlUserGroupModule) Create(ctx context.Context, id string, input *user_group_dto.Create) error {
+	if id == "" {
+		id = uuid.NewString()
+	}
 	return m.service.Crete(ctx, id, input.Name)
 }
 

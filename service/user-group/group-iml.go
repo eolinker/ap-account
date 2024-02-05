@@ -37,6 +37,9 @@ func (s *imlUserGroupService) GetLabels(ctx context.Context, ids ...string) map[
 }
 
 func (s *imlUserGroupService) Crete(ctx context.Context, id, name string) error {
+	if id == "" {
+		return errors.New("id is empty")
+	}
 	od, err := s.store.FirstQuery(ctx, "uuid = ? or name = ?", []interface{}{id, name}, "id")
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return err
