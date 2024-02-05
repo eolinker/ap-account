@@ -6,7 +6,7 @@ type UserGroup struct {
 	Id         string    `json:"id"`
 	Name       string    `json:"name"`
 	Creator    string    `json:"creator"`
-	CreateTime time.Time `json:"createTime"`
+	CreateTime time.Time `json:"create_time"`
 }
 
 type Member struct {
