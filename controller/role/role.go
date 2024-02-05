@@ -13,7 +13,7 @@ type IRoleController interface {
 	Save(ctx *gin.Context, id string, input *role_dto.Edit) error
 	Create(ctx *gin.Context, id string, input *role_dto.CreateRole) error
 	Delete(ctx *gin.Context, id string) error
-	Simple(ctx *gin.Context) ([]*role_dto.Simple, error)
+	Simple(ctx *gin.Context, keyword string) ([]*role_dto.Simple, error)
 }
 
 func init() {

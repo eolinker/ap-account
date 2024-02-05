@@ -34,6 +34,6 @@ func (c *imlRoleController) Delete(ctx *gin.Context, id string) error {
 	return c.module.Delete(ctx, id)
 }
 
-func (c *imlRoleController) Simple(ctx *gin.Context) ([]*role_dto.Simple, error) {
-	return c.module.Simple(ctx)
+func (c *imlRoleController) Simple(ctx *gin.Context, keyword string) ([]*role_dto.Simple, error) {
+	return c.module.Simple(ctx, keyword)
 }

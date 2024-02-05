@@ -50,7 +50,7 @@ func (m *imlRoleModule) Edit(ctx context.Context, id string, input *role_dto.Edi
 	return m.service.Save(ctx, id, input.Name)
 }
 
-func (m *imlRoleModule) Simple(ctx context.Context) ([]*role_dto.Simple, error) {
+func (m *imlRoleModule) Simple(ctx context.Context, keyword string) ([]*role_dto.Simple, error) {
 	list, err := m.service.List(ctx)
 	if err != nil {
 		return nil, err

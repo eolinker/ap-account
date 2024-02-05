@@ -39,8 +39,8 @@ func (s *imlRoleService) Get(ctx context.Context, id string) (*Role, error) {
 	return CreateModel(o), nil
 }
 
-func (s *imlRoleService) List(ctx context.Context) ([]*Role, error) {
-	list, err := s.store.List(ctx, map[string]interface{}{})
+func (s *imlRoleService) Search(ctx context.Context, keyword string) ([]*Role, error) {
+	list, err := s.store.ListQuery(ctx, "`name` like ?", []interface{}{"%" + keyword + "%"}, "name asc")
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (s *imlRoleService) Save(ctx context.Context, id string, name string) error
 		if v.Name == name {
 			return nil
 		}
-		_, err = s.store.First(ctx, map[string]interface{}{"name": name})
+		_, err = s.store.FirstQuery(ctx, "`uuid` = ? or `name`!=?", []interface{}{id, name}, "id")
 		if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("role already exist")
 		}

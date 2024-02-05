@@ -10,7 +10,7 @@ import (
 type IRoleModule interface {
 	Crete(ctx context.Context, id string, input *role_dto.CreateRole) error
 	Edit(ctx context.Context, id string, input *role_dto.Edit) error
-	Simple(ctx context.Context) ([]*role_dto.Simple, error)
+	Simple(ctx context.Context, keyword string) ([]*role_dto.Simple, error)
 	List(ctx context.Context) ([]*role_dto.Role, error)
 	Get(ctx context.Context, id string) (*role_dto.Role, error)
 	Delete(ctx context.Context, id string) error

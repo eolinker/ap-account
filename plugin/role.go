@@ -15,6 +15,6 @@ func (p *plugin) getRoleAPIs() []pm3.Api {
 		pm3.CreateApiWidthDoc(http.MethodPut, "/api/v1/manage/role", []string{"context", "query:id", "body"}, []string{}, p.roleController.Save),
 		pm3.CreateApiWidthDoc(http.MethodDelete, "/api/v1/manage/role/:id", []string{"context", "path:id"}, []string{}, p.roleController.Delete),
 		pm3.CreateApiWidthDoc(http.MethodDelete, "/api/v1/manage/role", []string{"context", "query:id"}, []string{}, p.roleController.Delete),
-		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/simple/roles", []string{"context"}, []string{"roles"}, p.roleController.Simple),
+		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/simple/roles", []string{"context", "query:keyword"}, []string{"roles"}, p.roleController.Simple),
 	}
 }
