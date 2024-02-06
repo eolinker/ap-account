@@ -3,11 +3,14 @@ package role
 import (
 	"context"
 	"errors"
+	"time"
+
+	"gitlab.eolink.com/apinto/common/auto"
+
 	"gitlab.eolink.com/apinto/aoaccount/common"
 	"gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"
-	"time"
 )
 
 var (
@@ -16,6 +19,10 @@ var (
 
 type imlRoleService struct {
 	store store.IRoleStore `autowired:""`
+}
+
+func (s *imlRoleService) OnComplete() {
+	auto.RegisterService("role", s)
 }
 
 func (s *imlRoleService) Delete(ctx context.Context, id string) error {
@@ -102,6 +109,17 @@ func (s *imlRoleService) Create(ctx context.Context, id string, name string) err
 		}
 
 		return s.store.Insert(ctx, nv)
+	})
+
+}
+func (s *imlRoleService) GetLabels(ctx context.Context, ids ...string) map[string]string {
+
+	roles, err := s.store.ListQuery(ctx, "uuid in(?)", []interface{}{ids}, "id")
+	if err != nil {
+		return map[string]string{}
+	}
+	return utils.SliceToMapO(roles, func(t *store.Role) (string, string) {
+		return t.UUID, t.Name
 	})
 
 }
