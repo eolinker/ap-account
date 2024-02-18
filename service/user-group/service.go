@@ -18,6 +18,7 @@ type IUserGroupService interface {
 	// ctx context.Context
 	// []*UserGroup, error
 	GetList(ctx context.Context) ([]*UserGroup, error)
+	Search(ctx context.Context, keyword string) ([]*UserGroup, error)
 }
 
 type IUserGroupMemberService member.IMemberService

@@ -22,6 +22,24 @@ type imlUserGroupService struct {
 	store store.IUserGroupStore `autowired:""`
 }
 
+func (s *imlUserGroupService) Search(ctx context.Context, keyword string) ([]*UserGroup, error) {
+	if keyword == "" {
+		return s.GetList(ctx)
+	}
+	list, err := s.store.ListQuery(ctx, "`name` like ?", []interface{}{"%" + keyword + "%"}, "name")
+	if err != nil {
+		return nil, err
+	}
+	return utils.SliceToSlice(list, func(e *store.UserGroup) *UserGroup {
+		return &UserGroup{
+			Id:         e.UUID,
+			Name:       e.Name,
+			Creator:    e.Creator,
+			CreateTime: e.CreateTime,
+		}
+	}), nil
+}
+
 func (s *imlUserGroupService) OnComplete() {
 	auto.RegisterService("user_group", s)
 }

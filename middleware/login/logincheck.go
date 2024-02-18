@@ -29,13 +29,18 @@ func init() {
 type ILoginCheck interface {
 	//pm3.IMiddleware
 	GetSession(ctx *gin.Context) (string, error)
-	Check(method string, path string) bool
-	Handler(ginCtx *gin.Context)
+	Check(method string, path string) (bool, []gin.HandlerFunc)
+	//Handler(ginCtx *gin.Context)
 	Name() string
+	Sort() int
 }
 
 type imlLoginCheck struct {
 	session.ISession `autowired:""`
+}
+
+func (m *imlLoginCheck) Sort() int {
+	return -1
 }
 
 func (m *imlLoginCheck) GetSession(ginCtx *gin.Context) (string, error) {
@@ -47,11 +52,11 @@ func (m *imlLoginCheck) GetSession(ginCtx *gin.Context) (string, error) {
 	return cookie, nil
 }
 
-func (m *imlLoginCheck) Check(method string, path string) bool {
+func (m *imlLoginCheck) Check(method string, path string) (bool, []gin.HandlerFunc) {
 	if strings.HasPrefix(path, "/api/") {
-		return true
+		return true, []gin.HandlerFunc{m.Handler}
 	}
-	return false
+	return false, nil
 
 }
 func NotLoginResponse(ctx *gin.Context) {
