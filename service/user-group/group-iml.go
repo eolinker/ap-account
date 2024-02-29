@@ -19,7 +19,8 @@ var (
 )
 
 type imlUserGroupService struct {
-	store store.IUserGroupStore `autowired:""`
+	store                store.IUserGroupStore       `autowired:""`
+	userGroupMemberStore store.IUserGroupMemberStore `autowired:""`
 }
 
 func (s *imlUserGroupService) Search(ctx context.Context, keyword string) ([]*UserGroup, error) {
@@ -108,6 +109,17 @@ func (s *imlUserGroupService) Edit(ctx context.Context, id, name string) error {
 }
 
 func (s *imlUserGroupService) Delete(ctx context.Context, id string) error {
+	if id == "" {
+		return nil
+	}
+	s.store.Transaction(ctx, func(ctx context.Context) error {
+		err := s.userGroupMemberStore.Delete(ctx, id)
+		if err != nil {
+			return err
+		}
+		_, err = s.store.DeleteQuery(ctx, "uuid = ?", id)
+		return err
+	})
 	deleteCount, err := s.store.DeleteWhere(ctx, map[string]interface{}{"uuid": id})
 	if err != nil {
 		return err

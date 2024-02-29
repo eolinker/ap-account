@@ -18,6 +18,9 @@ type User struct {
 	Status     int            `json:"status"`
 }
 
+func (u *User) GetLabel() string {
+	return u.Username
+}
 func CreateModel(e *store.UserInfo) *User {
 	return &User{
 		UID:        e.Uid,

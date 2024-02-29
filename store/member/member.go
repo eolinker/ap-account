@@ -75,7 +75,7 @@ func (s *Store) Members(ctx context.Context, comes []string, users []string) ([]
 	where := make([]string, 0, 2)
 	args := make([]interface{}, 0, 2)
 	if len(comes) > 0 {
-		where = append(where, "member.come in (?)")
+		where = append(where, "member.come !='' and member.come in (?)")
 		args = append(args, comes)
 	}
 	if len(users) > 0 {
@@ -99,7 +99,7 @@ func NewMemberStore(name string) *Store {
 	tableName := fmt.Sprintf("%s_member", name)
 	s := &Store{
 		name:  tableName,
-		joins: fmt.Sprintf("left join %s as member on member.uid = user_info.uid and user_info.is_delete = 0", tableName),
+		joins: fmt.Sprintf("inner join %s as member on member.uid = user_info.uid and user_info.is_delete = 0", tableName),
 		conflict: clause.OnConflict{
 			Columns:   []clause.Column{{Name: "uid"}, {Name: "come"}},
 			DoUpdates: clause.AssignmentColumns([]string{}),
