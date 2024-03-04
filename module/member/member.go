@@ -52,7 +52,11 @@ func (m *imlMemberModule) UserGroupMember(ctx context.Context, groupId ...string
 	if err != nil {
 		return nil, err
 	}
-	memberMap := utils.SliceToMapArrayO(utils.SliceToSlice(members, func(s *member.Member) *member.Member {
+	departmentMembers, err := m.departmentMemberService.Members(ctx, nil, userids)
+	if err != nil {
+		return nil, err
+	}
+	departmentMemberMap := utils.SliceToMapArrayO(utils.SliceToSlice(departmentMembers, func(s *member.Member) *member.Member {
 		return s
 	}, func(m *member.Member) bool {
 		return m.Come != ""
@@ -60,7 +64,7 @@ func (m *imlMemberModule) UserGroupMember(ctx context.Context, groupId ...string
 		return t.UID, t.Come
 	})
 	for _, r := range result {
-		r.Department = auto.List(memberMap[r.Uid])
+		r.Department = auto.List(departmentMemberMap[r.Uid])
 		r.UserGroups = auto.List(groups[r.Uid])
 	}
 	return result, nil
