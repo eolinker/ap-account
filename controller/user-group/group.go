@@ -1,11 +1,12 @@
 package user_group
 
 import (
+	"reflect"
+
 	"github.com/gin-gonic/gin"
 	user_group_dto "gitlab.eolink.com/apinto/aoaccount/module/user-group/dto"
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
 	"gitlab.eolink.com/apinto/common/autowire"
-	"reflect"
 )
 
 type IUserGroupController interface {
@@ -18,7 +19,7 @@ type IUserGroupController interface {
 
 	AddMember(ctx *gin.Context, user_group string, member *user_group_dto.AddMember) error
 	RemoveMember(ctx *gin.Context, user_group string, member string) error
-	Members(ctx *gin.Context, user_group string) ([]*user_dto.UserInfo, error)
+	Members(ctx *gin.Context, keyword, user_group string) ([]*user_dto.UserInfo, error)
 }
 
 func init() {
