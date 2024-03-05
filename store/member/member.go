@@ -27,6 +27,7 @@ type IMemberStore interface {
 	Members(ctx context.Context, cids []string, users []string) ([]*Member, error)
 	Delete(ctx context.Context, cid ...string) error
 	RemoveUser(ctx context.Context, uid ...string) error
+	//SoftRemoveMember(ctx context.Context, cid string, uids ...string) error
 }
 
 type Store struct {
@@ -61,6 +62,10 @@ func (s *Store) AddMember(ctx context.Context, cid string, uids ...string) error
 func (s *Store) RemoveMember(ctx context.Context, cid string, uids ...string) error {
 	return s.db.DB(ctx).Table(s.name).Where("come = ? and uid in (?)", cid, uids).Delete(s.name).Error
 }
+
+//func (s *Store) SoftRemoveMember(ctx context.Context, cid string, uids ...string) error {
+//	return s.db.DB(ctx).Table(s.name).Where("uid in (?)", uids).UpdateColumn("come", "").Error
+//}
 
 func (s *Store) OnComplete() {
 

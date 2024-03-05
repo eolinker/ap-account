@@ -3,6 +3,7 @@ package department
 import (
 	"context"
 	"errors"
+
 	"github.com/google/uuid"
 	department_dto "gitlab.eolink.com/apinto/aoaccount/module/department/dto"
 	"gitlab.eolink.com/apinto/aoaccount/service/account"
@@ -77,15 +78,16 @@ func (m *imlDepartmentModule) Simple(ctx context.Context) (*department_dto.Simpl
 	return root, nil
 }
 
-func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Department, int, error) {
+func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Department, error) {
 	list, err := m.service.Get(ctx)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	members, err := m.memberService.Members(ctx, nil, nil)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
+
 	departmentsMembers := utils.SliceToMapArrayO(members, func(t *department_member.Member) (string, string) {
 		return t.Come, t.UID
 	})
@@ -115,8 +117,8 @@ func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Departm
 		root.Children = append(root.Children, n)
 	}
 	root.SMembers()
-	unKnownDepartments := len(departmentsMembers[""])
-	return root.toDto(), unKnownDepartments, nil
+	//unKnownDepartments := len(departmentsMembers[""])
+	return root.toDto(), nil
 
 }
 

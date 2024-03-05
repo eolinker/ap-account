@@ -110,7 +110,7 @@ func (s *imlUserService) Search(ctx context.Context, department, keyword string)
 	switch strings.ToLower(department) {
 	case "unknown":
 		where = append(where, "not exists (select * from department_member ms where  ms.uid = user_info.uid)")
-	case "disabled":
+	case "disable":
 		where = append(where, "`status` != 1")
 	case "":
 
