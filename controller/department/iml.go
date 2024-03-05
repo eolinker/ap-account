@@ -71,8 +71,8 @@ func (c *imlDepartmentController) Tree(ctx *gin.Context) (*department_dto.Depart
 	return dpsroot, nil
 }
 
-func (c *imlDepartmentController) AddMember(ctx *gin.Context, id string, member *department_dto.AddMember) error {
-	return c.module.AddMember(ctx, id, member)
+func (c *imlDepartmentController) AddMember(ctx *gin.Context, member *department_dto.AddMember) error {
+	return c.module.AddMember(ctx, member)
 }
 
 func (c *imlDepartmentController) RemoveMember(ctx *gin.Context, id string, uid string) error {

@@ -12,7 +12,8 @@ type Edit struct {
 	ParentId *string `json:"parent_id"`
 }
 type AddMember struct {
-	UserIds []string `json:"user_ids"`
+	UserIds       []string `json:"user_ids"`
+	DepartmentIds []string `json:"department_ids"`
 }
 
 type RemoveMember struct {
