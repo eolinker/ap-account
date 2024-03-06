@@ -15,7 +15,7 @@ func (p *plugin) getDepartmentApis() []pm3.Api {
 		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/simple/departments", []string{"context"}, []string{"department"}, p.departmentController.Simple),
 
 		pm3.CreateApiWidthDoc(http.MethodPost, "/api/v1/user/department/member", []string{"context", "query:department", "body"}, []string{}, p.departmentController.AddMember),
-		pm3.CreateApiWidthDoc(http.MethodPost, "/api/v1/user/department/member/remove", []string{"context", "query:department", "query:user_id"}, []string{}, p.departmentController.RemoveMember),
-		pm3.CreateApiWidthDoc(http.MethodDelete, "/api/v1/user/department/members", []string{"context", "query:department", "body"}, []string{}, p.departmentController.RemoveMembers),
+		pm3.CreateApiWidthDoc(http.MethodDelete, "/api/v1/user/department/member", []string{"context", "query:department", "query:user_id"}, []string{}, p.departmentController.RemoveMember),
+		pm3.CreateApiWidthDoc(http.MethodPost, "/api/v1/user/department/member/remove", []string{"context", "query:department", "body"}, []string{}, p.departmentController.RemoveMembers),
 	}
 }

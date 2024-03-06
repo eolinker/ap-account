@@ -45,7 +45,11 @@ func (s *imlSession) Remove(ctx context.Context, session string) {
 		sv.Valid = false
 		sv.ExpireTime = time.Now().Add(ExpireTime).Unix()
 	}
-	s.sessionCache.Set(ctx, session, sv)
+	err = s.sessionCache.Set(ctx, session, sv)
+	if err != nil {
+		log.Warn("delete session error:", err)
+		return
+	}
 }
 
 func (s *imlSession) Check(ctx context.Context, sessionKey string) (Status, string) {

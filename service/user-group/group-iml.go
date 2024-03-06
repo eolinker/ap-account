@@ -112,22 +112,17 @@ func (s *imlUserGroupService) Delete(ctx context.Context, id string) error {
 	if id == "" {
 		return nil
 	}
-	s.store.Transaction(ctx, func(ctx context.Context) error {
-		err := s.userGroupMemberStore.Delete(ctx, id)
+	return s.store.Transaction(ctx, func(ctx context.Context) error {
+		deleteCount, err := s.store.DeleteWhere(ctx, map[string]interface{}{"uuid": id})
 		if err != nil {
 			return err
 		}
-		_, err = s.store.DeleteQuery(ctx, "uuid = ?", id)
-		return err
+		if deleteCount == 0 {
+			return errors.New("user group not found")
+		}
+		return s.userGroupMemberStore.Delete(ctx, id)
+
 	})
-	deleteCount, err := s.store.DeleteWhere(ctx, map[string]interface{}{"uuid": id})
-	if err != nil {
-		return err
-	}
-	if deleteCount == 0 {
-		return errors.New("user group not found")
-	}
-	return nil
 }
 
 func (s *imlUserGroupService) Get(ctx context.Context, id string) (*UserGroup, error) {
