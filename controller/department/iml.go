@@ -39,12 +39,19 @@ func (c *imlDepartmentController) Delete(ctx *gin.Context, id string) error {
 }
 
 func (c *imlDepartmentController) Tree(ctx *gin.Context) (*department_dto.Department, error) {
-	dpsroot, unknown, err := c.module.Tree(ctx)
+	dpsroot, err := c.module.Tree(ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	users, err := c.usersModule.Search(ctx, "unknown", "")
+	if err != nil {
+		return nil, err
+	}
+	unknown := len(users)
 	dpsroot.Name = "这里换成证书授权名"
 	dpsroot.Id = ""
+	dpsroot.Number += unknown
 	disableCount, err := c.usersModule.CountStatus(ctx, false)
 	if err != nil {
 		return nil, err
@@ -64,8 +71,8 @@ func (c *imlDepartmentController) Tree(ctx *gin.Context) (*department_dto.Depart
 	return dpsroot, nil
 }
 
-func (c *imlDepartmentController) AddMember(ctx *gin.Context, id string, member *department_dto.AddMember) error {
-	return c.module.AddMember(ctx, id, member)
+func (c *imlDepartmentController) AddMember(ctx *gin.Context, member *department_dto.AddMember) error {
+	return c.module.AddMember(ctx, member)
 }
 
 func (c *imlDepartmentController) RemoveMember(ctx *gin.Context, id string, uid string) error {

@@ -19,7 +19,7 @@ var (
 )
 
 type IMemberModule interface {
-	UserGroupMember(ctx context.Context, groupId ...string) ([]*user_dto.UserInfo, error)
+	UserGroupMember(ctx context.Context, keyword string, groupId ...string) ([]*user_dto.UserInfo, error)
 }
 
 type imlMemberModule struct {
@@ -28,9 +28,16 @@ type imlMemberModule struct {
 	userService             user.IUserService                  `autowired:""`
 }
 
-func (m *imlMemberModule) UserGroupMember(ctx context.Context, groupId ...string) ([]*user_dto.UserInfo, error) {
+func (m *imlMemberModule) UserGroupMember(ctx context.Context, keyword string, groupId ...string) ([]*user_dto.UserInfo, error) {
+	us, err := m.userService.Search(ctx, "", keyword)
+	if err != nil {
+		return nil, err
+	}
+	userIds := utils.SliceToSlice(us, func(s *user.User) string {
+		return s.UID
+	})
 
-	members, err := m.memberService.Members(ctx, groupId, nil)
+	members, err := m.memberService.Members(ctx, groupId, userIds)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +59,11 @@ func (m *imlMemberModule) UserGroupMember(ctx context.Context, groupId ...string
 	if err != nil {
 		return nil, err
 	}
-	memberMap := utils.SliceToMapArrayO(utils.SliceToSlice(members, func(s *member.Member) *member.Member {
+	departmentMembers, err := m.departmentMemberService.Members(ctx, nil, userids)
+	if err != nil {
+		return nil, err
+	}
+	departmentMemberMap := utils.SliceToMapArrayO(utils.SliceToSlice(departmentMembers, func(s *member.Member) *member.Member {
 		return s
 	}, func(m *member.Member) bool {
 		return m.Come != ""
@@ -60,7 +71,7 @@ func (m *imlMemberModule) UserGroupMember(ctx context.Context, groupId ...string
 		return t.UID, t.Come
 	})
 	for _, r := range result {
-		r.Department = auto.List(memberMap[r.Uid])
+		r.Department = auto.List(departmentMemberMap[r.Uid])
 		r.UserGroups = auto.List(groups[r.Uid])
 	}
 	return result, nil

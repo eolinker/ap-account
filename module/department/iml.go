@@ -3,6 +3,9 @@ package department
 import (
 	"context"
 	"errors"
+
+	"gitlab.eolink.com/apinto/common/store"
+
 	"github.com/google/uuid"
 	department_dto "gitlab.eolink.com/apinto/aoaccount/module/department/dto"
 	"gitlab.eolink.com/apinto/aoaccount/service/account"
@@ -19,6 +22,7 @@ type imlDepartmentModule struct {
 	service       department.IDepartmentService    `autowired:""`
 	userService   account.IAccountService          `autowired:""`
 	memberService department_member.IMemberService `autowired:""`
+	transaction   store.ITransaction               `autowired:""`
 }
 
 func (m *imlDepartmentModule) CreateDepartment(ctx context.Context, department *department_dto.Create) (string, error) {
@@ -77,15 +81,16 @@ func (m *imlDepartmentModule) Simple(ctx context.Context) (*department_dto.Simpl
 	return root, nil
 }
 
-func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Department, int, error) {
+func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Department, error) {
 	list, err := m.service.Get(ctx)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	members, err := m.memberService.Members(ctx, nil, nil)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
+
 	departmentsMembers := utils.SliceToMapArrayO(members, func(t *department_member.Member) (string, string) {
 		return t.Come, t.UID
 	})
@@ -115,13 +120,22 @@ func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Departm
 		root.Children = append(root.Children, n)
 	}
 	root.SMembers()
-	unKnownDepartments := len(departmentsMembers[""])
-	return root.toDto(), unKnownDepartments, nil
+	//unKnownDepartments := len(departmentsMembers[""])
+	return root.toDto(), nil
 
 }
 
-func (m *imlDepartmentModule) AddMember(ctx context.Context, id string, member *department_dto.AddMember) error {
-	return m.memberService.AddMemberTo(ctx, id, member.UserIds...)
+func (m *imlDepartmentModule) AddMember(ctx context.Context, member *department_dto.AddMember) error {
+	return m.transaction.Transaction(ctx, func(txCtx context.Context) error {
+		for _, cid := range member.DepartmentIds {
+			err := m.memberService.AddMemberTo(ctx, cid, member.UserIds...)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
 }
 
 func (m *imlDepartmentModule) RemoveMember(ctx context.Context, id string, uid string) error {

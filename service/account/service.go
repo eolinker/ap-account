@@ -3,9 +3,10 @@ package account
 import (
 	"context"
 	"errors"
+	"reflect"
+
 	"gitlab.eolink.com/apinto/aoaccount/service/usage"
 	"gitlab.eolink.com/apinto/common/autowire"
-	"reflect"
 )
 
 var (
@@ -24,7 +25,6 @@ type IAccountService interface {
 	//GetUserInfo(ctx context.Context, uid UserId) (account.UserInfo, error)
 	//UpdateUserInfo(ctx context.Context, uid UserId, userInfo account.UserInfo, operator UserId) error
 	//Remove(ctx context.Context, uid UserId) error
-
 	usage.IUserUsageService
 }
 

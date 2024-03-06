@@ -19,11 +19,11 @@ type imlUserGroupController struct {
 	userGroupMemberModule member.IMemberModule        `autowired:""`
 }
 
-func (c *imlUserGroupController) Members(ctx *gin.Context, userGroupId string) ([]*user_dto.UserInfo, error) {
+func (c *imlUserGroupController) Members(ctx *gin.Context, keyword, userGroupId string) ([]*user_dto.UserInfo, error) {
 	if userGroupId == "" {
-		return c.userGroupMemberModule.UserGroupMember(ctx)
+		return c.userGroupMemberModule.UserGroupMember(ctx, keyword)
 	} else {
-		return c.userGroupMemberModule.UserGroupMember(ctx, userGroupId)
+		return c.userGroupMemberModule.UserGroupMember(ctx, keyword, userGroupId)
 	}
 }
 

@@ -110,7 +110,7 @@ func (s *imlUserService) Search(ctx context.Context, department, keyword string)
 	switch strings.ToLower(department) {
 	case "unknown":
 		where = append(where, "not exists (select * from department_member ms where  ms.uid = user_info.uid)")
-	case "disabled":
+	case "disable":
 		where = append(where, "`status` != 1")
 	case "":
 
@@ -118,7 +118,8 @@ func (s *imlUserService) Search(ctx context.Context, department, keyword string)
 		where = append(where, "exists (select * from department_member ms where ms.come = ? and ms.uid = user_info.uid)")
 		args = append(args, department)
 	}
-
+	where = append(where, "is_delete = ?")
+	args = append(args, 0)
 	list, err := s.store.ListQuery(ctx, strings.Join(where, " and "), args, "`name` asc")
 	if err != nil {
 		return nil, err
