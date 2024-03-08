@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"log"
 
 	auth_password "gitlab.eolink.com/apinto/aoaccount/auth_driver/auth-password"
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
@@ -86,7 +87,7 @@ func (s *imlUserModule) OnComplete() {
 
 			})
 			if err != nil {
-				panic("init admin error: " + err.Error())
+				log.Fatal("init admin error: ", err.Error())
 			}
 		}
 	})

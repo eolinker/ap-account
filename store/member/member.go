@@ -3,6 +3,7 @@ package member
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -71,7 +72,7 @@ func (s *Store) OnComplete() {
 
 	err := s.db.DB(context.Background()).Table(s.name).AutoMigrate(&Member{})
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 }
