@@ -12,6 +12,10 @@ type imlUserController struct {
 	module user.IUserModule `autowired:""`
 }
 
+func (c *imlUserController) UpdateInfo(ctx *gin.Context, id string, user *user_dto.EditUser) error {
+	return c.module.UpdateInfo(ctx, id, user)
+}
+
 func (c *imlUserController) Simple(ctx *gin.Context, keyword string) ([]*user_dto.UserSimple, error) {
 	return c.module.Simple(ctx, keyword)
 }

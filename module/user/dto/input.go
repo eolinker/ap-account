@@ -14,3 +14,7 @@ type CreateUser struct {
 	Mobile      string   `json:"mobile"`
 	Departments []string `json:"department_ids"`
 }
+
+type EditUser struct {
+	Name *string `json:"name"`
+}

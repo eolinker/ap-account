@@ -32,6 +32,14 @@ type imlUserModule struct {
 	transaction             store.ITransaction                 `autowired:""`
 }
 
+func (s *imlUserModule) UpdateInfo(ctx context.Context, id string, user *user_dto.EditUser) error {
+	if user == nil {
+		return nil
+	}
+	_, err := s.userService.Update(ctx, id, user.Name, nil, nil)
+	return err
+}
+
 func (s *imlUserModule) Simple(ctx context.Context, keyword string) ([]*user_dto.UserSimple, error) {
 	list, err := s.userService.Search(ctx, "", keyword)
 	if err != nil {

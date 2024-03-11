@@ -2,9 +2,10 @@ package user
 
 import (
 	"context"
+	"reflect"
+
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
 	"gitlab.eolink.com/apinto/common/autowire"
-	"reflect"
 )
 
 type IUserModule interface {
@@ -15,6 +16,7 @@ type IUserModule interface {
 	Enable(ctx context.Context, user *user_dto.Enable) error
 	CountStatus(ctx context.Context, enable bool) (int, error)
 	Delete(ctx context.Context, ids ...string) error
+	UpdateInfo(ctx context.Context, id string, user *user_dto.EditUser) error
 }
 
 func init() {

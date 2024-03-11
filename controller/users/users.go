@@ -1,10 +1,11 @@
 package users
 
 import (
+	"reflect"
+
 	"github.com/gin-gonic/gin"
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
 	"gitlab.eolink.com/apinto/common/autowire"
-	"reflect"
 )
 
 type IUserController interface {
@@ -15,6 +16,7 @@ type IUserController interface {
 	Enable(ctx *gin.Context, user *user_dto.Enable) error
 	//CountStatus(ctx *gin.Context, enable bool) (int, error)
 	Delete(ctx *gin.Context, id string) error
+	UpdateInfo(ctx *gin.Context, id string, user *user_dto.EditUser) error
 }
 
 func init() {
