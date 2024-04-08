@@ -3,12 +3,13 @@ package account
 import (
 	"context"
 	"errors"
+	"time"
+
 	"gitlab.eolink.com/apinto/aoaccount/service/usage"
 	store "gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/autowire"
 	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"
-	"time"
 )
 
 var (
@@ -79,7 +80,9 @@ func (s *imlAccountService) OnRemoveUsers(ctx context.Context, ids ...string) er
 	if len(ids) == 0 {
 		return nil
 	}
-	_, err := s.store.DeleteQuery(ctx, "`uid` in (?)", ids)
+	_, err := s.store.DeleteWhere(ctx, map[string]interface{}{
+		"uid": ids,
+	})
 	if err != nil {
 		return err
 	}

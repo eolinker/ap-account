@@ -34,6 +34,7 @@ var (
 type AuthPassword interface {
 	Save(ctx context.Context, id string, identifier string, certificate string) error
 	Login(ctx context.Context, identifier string, certificate string) (string, error)
+	Delete(ctx context.Context, ids ...string) error
 }
 
 func init() {
@@ -44,6 +45,10 @@ func init() {
 
 type imlAuthPassword struct {
 	accountService account.IAccountService `autowired:""`
+}
+
+func (s *imlAuthPassword) Delete(ctx context.Context, ids ...string) error {
+	return s.accountService.OnRemoveUsers(ctx, ids...)
 }
 
 func (s *imlAuthPassword) Save(ctx context.Context, id string, identifier string, certificate string) error {

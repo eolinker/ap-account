@@ -184,6 +184,14 @@ func (s *imlUserModule) Enable(ctx context.Context, user *user_dto.Enable) error
 }
 func (s *imlUserModule) Delete(ctx context.Context, ids ...string) error {
 	return s.transaction.Transaction(ctx, func(txCtx context.Context) error {
+		err := s.departmentMemberService.OnRemoveUsers(ctx, ids...)
+		if err != nil {
+			return err
+		}
+		err = s.authPassword.Delete(ctx, ids...)
+		if err != nil {
+			return err
+		}
 		return s.userService.Delete(ctx, ids...)
 	})
 
