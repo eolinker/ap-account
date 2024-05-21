@@ -3,7 +3,6 @@ package user_group
 import (
 	"context"
 	"errors"
-	"gitlab.eolink.com/apinto/aoaccount/common"
 	"gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/auto"
 	"gitlab.eolink.com/apinto/common/autowire"
@@ -71,7 +70,7 @@ func (s *imlUserGroupService) Crete(ctx context.Context, id, name string) error 
 		Id:         0,
 		UUID:       id,
 		Name:       name,
-		Creator:    common.UserId(ctx),
+		Creator:    utils.UserId(ctx),
 		CreateTime: time.Now(),
 	})
 }
@@ -93,7 +92,7 @@ func (s *imlUserGroupService) Edit(ctx context.Context, id, name string) error {
 		}
 
 		ov.Name = name
-		ov.Creator = common.UserId(ctx)
+		ov.Creator = utils.UserId(ctx)
 		ov.CreateTime = time.Now()
 
 		update, err := s.store.Update(ctx, ov)

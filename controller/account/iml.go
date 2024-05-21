@@ -2,7 +2,6 @@ package account
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/common"
 	"gitlab.eolink.com/apinto/aoaccount/middleware/login"
 	"gitlab.eolink.com/apinto/aoaccount/module/account"
 	"gitlab.eolink.com/apinto/aoaccount/module/account/dto"
@@ -66,7 +65,7 @@ func (c *imlAccountController) CheckLogin(ctx *gin.Context) (string, []any, erro
 }
 
 func (c *imlAccountController) PermitSystem(ctx *gin.Context) ([]string, error) {
-	uid := common.UserId(ctx)
+	uid := utils.UserId(ctx)
 	if uid == "" {
 		return nil, nil
 	}
@@ -78,7 +77,7 @@ func (c *imlAccountController) PermitSystem(ctx *gin.Context) ([]string, error) 
 }
 
 func (c *imlAccountController) Profile(ctx *gin.Context) (*dto.Profile, error) {
-	uid := common.UserId(ctx)
+	uid := utils.UserId(ctx)
 	if uid == "" {
 		return nil, nil
 	}

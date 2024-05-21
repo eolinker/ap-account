@@ -2,10 +2,10 @@ package login
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/common"
 	"gitlab.eolink.com/apinto/aoaccount/session"
 	"gitlab.eolink.com/apinto/common/autowire"
 	"gitlab.eolink.com/apinto/common/ignore"
+	"gitlab.eolink.com/apinto/common/utils"
 	"net/http"
 	"reflect"
 	"strings"
@@ -79,7 +79,7 @@ func (m *imlLoginCheck) Handler(ginCtx *gin.Context) {
 	status, uid := m.ISession.Check(ginCtx, sv)
 	switch status {
 	case session.Login:
-		common.SetUserId(ginCtx, uid)
+		utils.SetUserId(ginCtx, uid)
 		return
 	case session.Expired:
 		if notIgnore {

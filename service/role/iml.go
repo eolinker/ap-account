@@ -7,7 +7,6 @@ import (
 
 	"gitlab.eolink.com/apinto/common/auto"
 
-	"gitlab.eolink.com/apinto/aoaccount/common"
 	"gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"
@@ -63,7 +62,7 @@ func (s *imlRoleService) Search(ctx context.Context, keyword string) ([]*Role, e
 }
 
 func (s *imlRoleService) Save(ctx context.Context, id string, name string) error {
-	operator := common.UserId(ctx)
+	operator := utils.UserId(ctx)
 
 	return s.store.Transaction(ctx, func(ctx context.Context) error {
 		v, err := s.store.First(ctx, map[string]interface{}{"uuid": id})
@@ -91,7 +90,7 @@ func (s *imlRoleService) Save(ctx context.Context, id string, name string) error
 }
 
 func (s *imlRoleService) Create(ctx context.Context, id string, name string) error {
-	operator := common.UserId(ctx)
+	operator := utils.UserId(ctx)
 	nv := &store.Role{
 		Id:         0,
 		UUID:       id,
