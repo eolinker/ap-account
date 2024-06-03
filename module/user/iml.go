@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	"fmt"
+	"gitlab.eolink.com/apinto/aoaccount/service/department"
 	"log"
 
 	auth_password "gitlab.eolink.com/apinto/aoaccount/auth_driver/auth-password"
@@ -27,6 +29,7 @@ const (
 type imlUserModule struct {
 	userService             user.IUserService                  `autowired:""`
 	departmentMemberService department_member.IMemberService   `autowired:""`
+	departmentService       department.IDepartmentService      `autowired:""`
 	authPassword            auth_password.AuthPassword         `autowired:""`
 	userGroupsMemberService user_group.IUserGroupMemberService `autowired:""`
 	transaction             store.ITransaction                 `autowired:""`
@@ -41,7 +44,7 @@ func (s *imlUserModule) UpdateInfo(ctx context.Context, id string, user *user_dt
 }
 
 func (s *imlUserModule) Simple(ctx context.Context, keyword string) ([]*user_dto.UserSimple, error) {
-	list, err := s.userService.Search(ctx, "", keyword)
+	list, err := s.userService.Search(ctx, keyword, -1)
 	if err != nil {
 		return nil, err
 	}
@@ -116,7 +119,28 @@ func (s *imlUserModule) CountStatus(ctx context.Context, enable bool) (int, erro
 }
 
 func (s *imlUserModule) Search(ctx context.Context, department string, keyword string) ([]*user_dto.UserInfo, error) {
-	list, err := s.userService.Search(ctx, department, keyword)
+
+	var list []*user.User
+	var err error
+
+	switch department {
+	case "disable":
+		list, err = s.userService.Search(ctx, keyword, 1)
+	case "unknown":
+		list, err = s.userService.SearchUnknown(ctx, keyword)
+	case "":
+		list, err = s.userService.Search(ctx, keyword, -1)
+	default:
+		tree, errT := s.departmentService.Tree(ctx)
+		if errT != nil {
+			return nil, errT
+		}
+		if node, has := tree.Find(department); has {
+			list, err = s.userService.Search(ctx, keyword, -1, node.GetChildren()...)
+		} else {
+			return nil, fmt.Errorf("departemnt %s not exist", department)
+		}
+	}
 	if err != nil {
 		return nil, err
 	}

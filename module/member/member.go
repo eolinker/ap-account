@@ -29,7 +29,7 @@ type imlMemberModule struct {
 }
 
 func (m *imlMemberModule) UserGroupMember(ctx context.Context, keyword string, groupId ...string) ([]*user_dto.UserInfo, error) {
-	us, err := m.userService.Search(ctx, "", keyword)
+	us, err := m.userService.Search(ctx, keyword, -1)
 	if err != nil {
 		return nil, err
 	}

@@ -82,7 +82,7 @@ func (m *imlDepartmentModule) Simple(ctx context.Context) (*department_dto.Simpl
 }
 
 func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Department, error) {
-	list, err := m.service.Get(ctx)
+	tree, err := m.service.Tree(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -94,34 +94,8 @@ func (m *imlDepartmentModule) Tree(ctx context.Context) (*department_dto.Departm
 	departmentsMembers := utils.SliceToMapArrayO(members, func(t *department_member.Member) (string, string) {
 		return t.Come, t.UID
 	})
-	nodes := utils.SliceToMapO(list, func(s *department.Department) (string, *Node) {
-		return s.Id, &Node{
-			Id:       s.Id,
-			Name:     s.Name,
-			ParentId: s.ParentId,
-			Children: nil,
-			Members:  utils.NewSet(departmentsMembers[s.Id]...),
-		}
-	})
-	root := &Node{
-		Id:       "Root",
-		Name:     "Root",
-		ParentId: "",
-		Members:  utils.NewSet[string](),
-		Children: nil,
-	}
-	for _, n := range nodes {
-		if n.ParentId != "" {
-			if p, has := nodes[n.ParentId]; has {
-				p.Children = append(p.Children, n)
-				continue
-			}
-		}
-		root.Children = append(root.Children, n)
-	}
-	root.SMembers()
-	//unKnownDepartments := len(departmentsMembers[""])
-	return root.toDto(), nil
+
+	return toDto(tree, departmentsMembers), nil
 
 }
 

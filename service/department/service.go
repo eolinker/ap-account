@@ -11,8 +11,8 @@ type IDepartmentService interface {
 	Create(ctx context.Context, id string, name, parent string) error
 	Edit(ctx context.Context, id string, name, parent *string) error
 	Get(ctx context.Context, ids ...string) ([]*Department, error)
+	Tree(ctx context.Context) (*Node, error)
 	Delete(ctx context.Context, id string) error
-
 	auto.CompleteService
 }
 

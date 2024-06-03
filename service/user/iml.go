@@ -23,6 +23,26 @@ type imlUserService struct {
 	store store.IUserInfoStore `autowired:""`
 }
 
+func (s *imlUserService) SearchUnknown(ctx context.Context, keyword string) ([]*User, error) {
+	where := make([]string, 0, 2)
+	args := make([]interface{}, 0, 5)
+	if keyword != "" {
+		kv := fmt.Sprint("%", keyword, "%")
+		where = append(where, "(`name` LIKE ? or `email` LIKE ? or `mobile` LIKE ? or `push_token` Like ?)")
+		args = append(args, kv, kv, kv, kv)
+
+	}
+
+	where = append(where, "not exists (select * from department_member ms where  ms.uid = user_info.uid)")
+	where = append(where, "is_delete = ?")
+	args = append(args, 0)
+	list, err := s.store.ListQuery(ctx, strings.Join(where, " and "), args, "`name` asc")
+	if err != nil {
+		return nil, err
+	}
+	return utils.SliceToSlice(list, CreateModel), nil
+}
+
 func (s *imlUserService) Get(ctx context.Context, ids ...string) ([]*User, error) {
 	if len(ids) == 0 {
 		return nil, errors.New("ids is empty")
@@ -97,7 +117,7 @@ func (s *imlUserService) Delete(ctx context.Context, ids ...string) error {
 	})
 }
 
-func (s *imlUserService) Search(ctx context.Context, department, keyword string) ([]*User, error) {
+func (s *imlUserService) Search(ctx context.Context, keyword string, status int, department ...string) ([]*User, error) {
 
 	where := make([]string, 0, 2)
 	args := make([]interface{}, 0, 5)
@@ -107,15 +127,20 @@ func (s *imlUserService) Search(ctx context.Context, department, keyword string)
 		args = append(args, kv, kv, kv, kv)
 
 	}
-	switch strings.ToLower(department) {
-	case "unknown":
-		where = append(where, "not exists (select * from department_member ms where  ms.uid = user_info.uid)")
-	case "disable":
+	if status >= 0 {
 		where = append(where, "`status` != 1")
-	case "":
+	}
 
-	default:
+	switch len(department) {
+	//case "unknown":
+	//	where = append(where, "not exists (select * from department_member ms where  ms.uid = user_info.uid)")
+
+	case 0:
+	case 1:
 		where = append(where, "exists (select * from department_member ms where ms.come = ? and ms.uid = user_info.uid)")
+		args = append(args, department[0])
+	default:
+		where = append(where, "exists (select * from department_member ms where ms.come in(?) and ms.uid = user_info.uid)")
 		args = append(args, department)
 	}
 	where = append(where, "is_delete = ?")

@@ -19,6 +19,15 @@ type imlDepartmentService struct {
 	membersStore    store.DepartmentMemberStore `autowired:""`
 }
 
+func (s *imlDepartmentService) Tree(ctx context.Context) (*Node, error) {
+	list, err := s.departmentStore.List(ctx, map[string]interface{}{})
+	if err != nil {
+		return nil, err
+	}
+	return ToTree(list), nil
+
+}
+
 func (s *imlDepartmentService) OnComplete() {
 	auto.RegisterService("department", s)
 }
@@ -65,7 +74,7 @@ func (s *imlDepartmentService) Delete(ctx context.Context, id string) error {
 
 func (s *imlDepartmentService) Get(ctx context.Context, ids ...string) ([]*Department, error) {
 	if len(ids) == 0 {
-		list, err := s.departmentStore.List(ctx, map[string]interface{}{})
+		list, err := s.departmentStore.List(ctx, map[string]interface{}{}, "name asc")
 		if err != nil {
 			return nil, err
 		}
