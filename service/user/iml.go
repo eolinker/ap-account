@@ -108,7 +108,9 @@ func (s *imlUserService) SetStatus(ctx context.Context, status int, ids ...strin
 
 func (s *imlUserService) Delete(ctx context.Context, ids ...string) error {
 	return s.store.Transaction(ctx, func(ctx context.Context) error {
-		err := s.store.SoftDeleteQuery(ctx, "uid in(?)", ids)
+		err := s.store.SoftDelete(ctx, map[string]interface{}{
+			"uid": ids,
+		})
 		if err != nil {
 			return err
 		}

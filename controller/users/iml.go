@@ -1,6 +1,7 @@
 package users
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"gitlab.eolink.com/apinto/aoaccount/module/user"
 	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
@@ -36,6 +37,14 @@ func (c *imlUserController) Enable(ctx *gin.Context, user *user_dto.Enable) erro
 	return c.module.Enable(ctx, user)
 }
 
-func (c *imlUserController) Delete(ctx *gin.Context, id string) error {
-	return c.module.Delete(ctx, id)
+func (c *imlUserController) Delete(ctx *gin.Context, idStr string) error {
+	if idStr == "" {
+		return nil
+	}
+	ids := make([]string, 0)
+	err := json.Unmarshal([]byte(idStr), &ids)
+	if err != nil {
+		return err
+	}
+	return c.module.Delete(ctx, ids...)
 }
