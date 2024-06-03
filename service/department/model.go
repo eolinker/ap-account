@@ -27,6 +27,7 @@ func ToTree(entities []*store.Department) *Node {
 		Name:     "root",
 		Children: nil,
 	}
+
 	all := utils.SliceToMapO(entities, func(i *store.Department) (string, *Node) {
 		n := &Node{
 			Id:       i.UUID,
@@ -34,17 +35,18 @@ func ToTree(entities []*store.Department) *Node {
 			parent:   i.Parent,
 			Children: nil,
 		}
-		if n.parent == "" {
-			root.Children = append(root.Children, n)
-		}
+
 		return i.UUID, n
 	})
+
 	for _, i := range all {
 		if i.parent == "" {
 			continue
 		}
 		if p, ok := all[i.parent]; ok {
 			p.Children = append(p.Children, i)
+		} else {
+			root.Children = append(root.Children, i)
 		}
 	}
 	return root
@@ -75,7 +77,7 @@ func (n *Node) Find(id string) (*Node, bool) {
 }
 func (n *Node) GetChildren() []string {
 	if n.Children == nil {
-		return nil
+		return []string{n.Id}
 	}
 
 	tmp := make([][]string, 0, len(n.Children))
@@ -87,7 +89,8 @@ func (n *Node) GetChildren() []string {
 			tmp = append(tmp, cl)
 		}
 	}
-	ids := make([]string, 0, len(n.Children)+count)
+	ids := make([]string, 0, len(n.Children)+count+1)
+	ids = append(ids, n.Id)
 	ids = append(ids, utils.SliceToSlice(n.Children, func(i *Node) string {
 		return i.Id
 	})...)
