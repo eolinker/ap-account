@@ -3,7 +3,7 @@ package department
 import (
 	"context"
 	"errors"
-	store "gitlab.eolink.com/apinto/aoaccount/store"
+	"gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/auto"
 	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"

@@ -182,8 +182,8 @@ func (s *imlUserModule) AddForPassword(ctx context.Context, user *user_dto.Creat
 		}
 
 		if len(user.Departments) > 0 {
-			for _, department := range user.Departments {
-				err := s.departmentMemberService.AddMemberTo(ctx, department, newUser.UID)
+			for _, dp := range user.Departments {
+				err := s.departmentMemberService.AddMemberTo(ctx, dp, newUser.UID)
 				if err != nil {
 					return err
 				}

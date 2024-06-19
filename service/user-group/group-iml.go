@@ -59,7 +59,7 @@ func (s *imlUserGroupService) Crete(ctx context.Context, id, name string) error 
 		return errors.New("id is empty")
 	}
 	od, err := s.store.FirstQuery(ctx, "uuid = ? or name = ?", []interface{}{id, name}, "id")
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
 	if od != nil {

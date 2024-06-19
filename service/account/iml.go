@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"gitlab.eolink.com/apinto/aoaccount/service/usage"
-	store "gitlab.eolink.com/apinto/aoaccount/store"
+	"gitlab.eolink.com/apinto/aoaccount/store"
 	"gitlab.eolink.com/apinto/common/autowire"
 	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"

@@ -2,15 +2,10 @@ package account
 
 import (
 	"context"
-	"errors"
 	"reflect"
 
 	"gitlab.eolink.com/apinto/aoaccount/service/usage"
 	"gitlab.eolink.com/apinto/common/autowire"
-)
-
-var (
-	ErrorUserNotFound = errors.New("user not found")
 )
 
 type UserId = string

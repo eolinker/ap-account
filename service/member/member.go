@@ -56,6 +56,7 @@ func (s *Service[S]) RemoveMemberFrom(ctx context.Context, cid string, userIds .
 func (s *Service[S]) Members(ctx context.Context, cids []string, users []string) ([]*Member, error) {
 
 	members, err := s.store.Members(ctx, cids, users)
+
 	if err != nil {
 		return nil, err
 	}
