@@ -1,9 +1,9 @@
 package department_member
 
 import (
-	"gitlab.eolink.com/apinto/aoaccount/service/member"
-	"gitlab.eolink.com/apinto/aoaccount/store"
-	"gitlab.eolink.com/apinto/common/autowire"
+	"github.com/eolinker/ap-account/service/member"
+	"github.com/eolinker/ap-account/store"
+	"github.com/eolinker/go-common/autowire"
 	"reflect"
 )
 

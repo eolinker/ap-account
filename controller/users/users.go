@@ -3,9 +3,9 @@ package users
 import (
 	"reflect"
 
+	user_dto "github.com/eolinker/ap-account/module/user/dto"
+	"github.com/eolinker/go-common/autowire"
 	"github.com/gin-gonic/gin"
-	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
-	"gitlab.eolink.com/apinto/common/autowire"
 )
 
 type IUserController interface {

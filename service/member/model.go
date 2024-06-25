@@ -3,7 +3,7 @@ package member
 import (
 	"time"
 
-	"gitlab.eolink.com/apinto/aoaccount/store/member"
+	"github.com/eolinker/ap-account/store/member"
 )
 
 type Member struct {

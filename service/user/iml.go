@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/eolinker/ap-account/service/usage"
+	"github.com/eolinker/ap-account/store"
+	"github.com/eolinker/go-common/auto"
+	"github.com/eolinker/go-common/utils"
 	"github.com/google/uuid"
-	"gitlab.eolink.com/apinto/aoaccount/service/usage"
-	"gitlab.eolink.com/apinto/aoaccount/store"
-	"gitlab.eolink.com/apinto/common/auto"
-	"gitlab.eolink.com/apinto/common/utils"
 	"gorm.io/gorm"
 )
 

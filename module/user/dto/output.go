@@ -1,8 +1,8 @@
 package user_dto
 
 import (
-	"gitlab.eolink.com/apinto/aoaccount/service/user"
-	"gitlab.eolink.com/apinto/common/auto"
+	"github.com/eolinker/ap-account/service/user"
+	"github.com/eolinker/go-common/auto"
 )
 
 type UserInfo struct {

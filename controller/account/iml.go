@@ -1,13 +1,13 @@
 package account
 
 import (
+	"github.com/eolinker/ap-account/middleware/login"
+	"github.com/eolinker/ap-account/module/account"
+	"github.com/eolinker/ap-account/module/account/dto"
+	"github.com/eolinker/ap-account/session"
+	"github.com/eolinker/go-common/access"
+	"github.com/eolinker/go-common/utils"
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/middleware/login"
-	"gitlab.eolink.com/apinto/aoaccount/module/account"
-	"gitlab.eolink.com/apinto/aoaccount/module/account/dto"
-	"gitlab.eolink.com/apinto/aoaccount/session"
-	"gitlab.eolink.com/apinto/common/access"
-	"gitlab.eolink.com/apinto/common/utils"
 )
 
 var (

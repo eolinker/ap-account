@@ -1,5 +1,5 @@
 package department_member
 
-import "gitlab.eolink.com/apinto/aoaccount/service/member"
+import "github.com/eolinker/ap-account/service/member"
 
 type Member = member.Member

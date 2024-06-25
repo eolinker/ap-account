@@ -3,7 +3,7 @@ package plugin
 import (
 	"net/http"
 
-	"gitlab.eolink.com/apinto/common/pm3"
+	"github.com/eolinker/go-common/pm3"
 )
 
 func (p *plugin) getUsersApis() []pm3.Api {

@@ -1,6 +1,6 @@
 package role_dto
 
-import "gitlab.eolink.com/apinto/common/auto"
+import "github.com/eolinker/go-common/auto"
 
 type Role struct {
 	Id         string         `json:"id"`

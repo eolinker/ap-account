@@ -1,8 +1,8 @@
 package store
 
 import (
-	"gitlab.eolink.com/apinto/common/autowire"
-	"gitlab.eolink.com/apinto/common/store"
+	"github.com/eolinker/go-common/autowire"
+	"github.com/eolinker/go-common/store"
 	"reflect"
 )
 

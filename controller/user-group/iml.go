@@ -1,12 +1,12 @@
 package user_group
 
 import (
+	"github.com/eolinker/ap-account/module/member"
+	"github.com/eolinker/ap-account/module/user"
+	user_group "github.com/eolinker/ap-account/module/user-group"
+	user_group_dto "github.com/eolinker/ap-account/module/user-group/dto"
+	user_dto "github.com/eolinker/ap-account/module/user/dto"
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/module/member"
-	"gitlab.eolink.com/apinto/aoaccount/module/user"
-	user_group "gitlab.eolink.com/apinto/aoaccount/module/user-group"
-	user_group_dto "gitlab.eolink.com/apinto/aoaccount/module/user-group/dto"
-	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
 )
 
 var (

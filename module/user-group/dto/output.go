@@ -1,6 +1,6 @@
 package user_group_dto
 
-import "gitlab.eolink.com/apinto/common/auto"
+import "github.com/eolinker/go-common/auto"
 
 type UserGroup struct {
 	Id         string         `json:"id"`

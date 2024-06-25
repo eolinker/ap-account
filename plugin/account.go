@@ -1,8 +1,8 @@
 package plugin
 
 import (
-	"gitlab.eolink.com/apinto/common/ignore"
-	"gitlab.eolink.com/apinto/common/pm3"
+	"github.com/eolinker/go-common/ignore"
+	"github.com/eolinker/go-common/pm3"
 	"net/http"
 )
 

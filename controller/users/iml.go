@@ -2,9 +2,9 @@ package users
 
 import (
 	"encoding/json"
+	"github.com/eolinker/ap-account/module/user"
+	user_dto "github.com/eolinker/ap-account/module/user/dto"
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/module/user"
-	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
 )
 
 var _ IUserController = (*imlUserController)(nil)

@@ -1,8 +1,8 @@
 package user
 
 import (
-	"gitlab.eolink.com/apinto/aoaccount/service"
-	"gitlab.eolink.com/apinto/aoaccount/store"
+	"github.com/eolinker/ap-account/service"
+	"github.com/eolinker/ap-account/store"
 	"time"
 )
 

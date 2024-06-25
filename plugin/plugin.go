@@ -1,12 +1,12 @@
 package plugin
 
 import (
-	"gitlab.eolink.com/apinto/aoaccount/controller/account"
-	"gitlab.eolink.com/apinto/aoaccount/controller/department"
-	"gitlab.eolink.com/apinto/aoaccount/controller/role"
-	user_group "gitlab.eolink.com/apinto/aoaccount/controller/user-group"
-	"gitlab.eolink.com/apinto/aoaccount/controller/users"
-	"gitlab.eolink.com/apinto/common/pm3"
+	"github.com/eolinker/ap-account/controller/account"
+	"github.com/eolinker/ap-account/controller/department"
+	"github.com/eolinker/ap-account/controller/role"
+	user_group "github.com/eolinker/ap-account/controller/user-group"
+	"github.com/eolinker/ap-account/controller/users"
+	"github.com/eolinker/go-common/pm3"
 )
 
 var (

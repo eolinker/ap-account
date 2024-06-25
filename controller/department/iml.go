@@ -1,10 +1,10 @@
 package department
 
 import (
+	"github.com/eolinker/ap-account/module/department"
+	department_dto "github.com/eolinker/ap-account/module/department/dto"
+	"github.com/eolinker/ap-account/module/user"
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/module/department"
-	department_dto "gitlab.eolink.com/apinto/aoaccount/module/department/dto"
-	"gitlab.eolink.com/apinto/aoaccount/module/user"
 )
 
 var (

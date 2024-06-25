@@ -3,10 +3,10 @@ package user_group
 import (
 	"context"
 	"errors"
-	"gitlab.eolink.com/apinto/aoaccount/store"
-	"gitlab.eolink.com/apinto/common/auto"
-	"gitlab.eolink.com/apinto/common/autowire"
-	"gitlab.eolink.com/apinto/common/utils"
+	"github.com/eolinker/ap-account/store"
+	"github.com/eolinker/go-common/auto"
+	"github.com/eolinker/go-common/autowire"
+	"github.com/eolinker/go-common/utils"
 	"gorm.io/gorm"
 	"time"
 )

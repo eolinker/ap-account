@@ -1,8 +1,8 @@
 package department
 
 import (
-	"gitlab.eolink.com/apinto/aoaccount/store"
-	"gitlab.eolink.com/apinto/common/utils"
+	"github.com/eolinker/ap-account/store"
+	"github.com/eolinker/go-common/utils"
 	"time"
 )
 

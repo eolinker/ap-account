@@ -1,8 +1,8 @@
 package plugin
 
 import (
-	"gitlab.eolink.com/apinto/common/autowire"
-	"gitlab.eolink.com/apinto/common/pm3"
+	"github.com/eolinker/go-common/autowire"
+	"github.com/eolinker/go-common/pm3"
 )
 
 func init() {

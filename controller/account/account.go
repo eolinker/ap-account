@@ -1,10 +1,10 @@
 package account
 
 import (
+	"github.com/eolinker/ap-account/middleware/login"
+	"github.com/eolinker/ap-account/module/account/dto"
+	"github.com/eolinker/go-common/autowire"
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/middleware/login"
-	"gitlab.eolink.com/apinto/aoaccount/module/account/dto"
-	"gitlab.eolink.com/apinto/common/autowire"
 	"reflect"
 )
 

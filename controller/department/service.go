@@ -3,9 +3,9 @@ package department
 import (
 	"reflect"
 
+	department_dto "github.com/eolinker/ap-account/module/department/dto"
+	"github.com/eolinker/go-common/autowire"
 	"github.com/gin-gonic/gin"
-	department_dto "gitlab.eolink.com/apinto/aoaccount/module/department/dto"
-	"gitlab.eolink.com/apinto/common/autowire"
 )
 
 type IDepartmentController interface {

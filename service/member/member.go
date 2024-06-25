@@ -3,9 +3,9 @@ package member
 import (
 	"context"
 
-	"gitlab.eolink.com/apinto/aoaccount/service/usage"
-	"gitlab.eolink.com/apinto/aoaccount/store/member"
-	"gitlab.eolink.com/apinto/common/utils"
+	"github.com/eolinker/ap-account/service/usage"
+	"github.com/eolinker/ap-account/store/member"
+	"github.com/eolinker/go-common/utils"
 )
 
 var (

@@ -1,9 +1,9 @@
 package department
 
 import (
-	department_dto "gitlab.eolink.com/apinto/aoaccount/module/department/dto"
-	"gitlab.eolink.com/apinto/aoaccount/service/department"
-	"gitlab.eolink.com/apinto/common/utils"
+	department_dto "github.com/eolinker/ap-account/module/department/dto"
+	"github.com/eolinker/ap-account/service/department"
+	"github.com/eolinker/go-common/utils"
 )
 
 func toDto(node *department.Node, members map[string][]string) *department_dto.Department {

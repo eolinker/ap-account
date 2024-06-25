@@ -3,19 +3,19 @@ package user
 import (
 	"context"
 	"fmt"
-	"gitlab.eolink.com/apinto/aoaccount/service/department"
+	"github.com/eolinker/ap-account/service/department"
 	"log"
 
-	auth_password "gitlab.eolink.com/apinto/aoaccount/auth_driver/auth-password"
-	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
-	department_member "gitlab.eolink.com/apinto/aoaccount/service/department-member"
-	"gitlab.eolink.com/apinto/aoaccount/service/user"
-	user_group "gitlab.eolink.com/apinto/aoaccount/service/user-group"
-	"gitlab.eolink.com/apinto/common/auto"
-	"gitlab.eolink.com/apinto/common/register"
-	"gitlab.eolink.com/apinto/common/server"
-	"gitlab.eolink.com/apinto/common/store"
-	"gitlab.eolink.com/apinto/common/utils"
+	auth_password "github.com/eolinker/ap-account/auth_driver/auth-password"
+	user_dto "github.com/eolinker/ap-account/module/user/dto"
+	department_member "github.com/eolinker/ap-account/service/department-member"
+	"github.com/eolinker/ap-account/service/user"
+	user_group "github.com/eolinker/ap-account/service/user-group"
+	"github.com/eolinker/go-common/auto"
+	"github.com/eolinker/go-common/register"
+	"github.com/eolinker/go-common/server"
+	"github.com/eolinker/go-common/store"
+	"github.com/eolinker/go-common/utils"
 )
 
 var (

@@ -1,9 +1,9 @@
 package role
 
 import (
+	"github.com/eolinker/ap-account/module/role"
+	role_dto "github.com/eolinker/ap-account/module/role/dto"
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/module/role"
-	role_dto "gitlab.eolink.com/apinto/aoaccount/module/role/dto"
 )
 
 var (

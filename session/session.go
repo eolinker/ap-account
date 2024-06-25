@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/eolinker/eosc/log"
+	"github.com/eolinker/go-common/autowire"
+	"github.com/eolinker/go-common/cache"
 	"github.com/google/uuid"
-	"gitlab.eolink.com/apinto/common/autowire"
-	"gitlab.eolink.com/apinto/common/cache"
 	"reflect"
 	"time"
 )

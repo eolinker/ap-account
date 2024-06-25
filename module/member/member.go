@@ -4,14 +4,14 @@ import (
 	"context"
 	"reflect"
 
-	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
-	department_member "gitlab.eolink.com/apinto/aoaccount/service/department-member"
-	"gitlab.eolink.com/apinto/aoaccount/service/member"
-	"gitlab.eolink.com/apinto/aoaccount/service/user"
-	user_group "gitlab.eolink.com/apinto/aoaccount/service/user-group"
-	"gitlab.eolink.com/apinto/common/auto"
-	"gitlab.eolink.com/apinto/common/autowire"
-	"gitlab.eolink.com/apinto/common/utils"
+	user_dto "github.com/eolinker/ap-account/module/user/dto"
+	department_member "github.com/eolinker/ap-account/service/department-member"
+	"github.com/eolinker/ap-account/service/member"
+	"github.com/eolinker/ap-account/service/user"
+	user_group "github.com/eolinker/ap-account/service/user-group"
+	"github.com/eolinker/go-common/auto"
+	"github.com/eolinker/go-common/autowire"
+	"github.com/eolinker/go-common/utils"
 )
 
 var (

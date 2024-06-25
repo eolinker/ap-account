@@ -1,11 +1,11 @@
 package login
 
 import (
+	"github.com/eolinker/ap-account/session"
+	"github.com/eolinker/go-common/autowire"
+	"github.com/eolinker/go-common/ignore"
+	"github.com/eolinker/go-common/utils"
 	"github.com/gin-gonic/gin"
-	"gitlab.eolink.com/apinto/aoaccount/session"
-	"gitlab.eolink.com/apinto/common/autowire"
-	"gitlab.eolink.com/apinto/common/ignore"
-	"gitlab.eolink.com/apinto/common/utils"
 	"net/http"
 	"reflect"
 	"strings"

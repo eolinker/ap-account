@@ -4,8 +4,8 @@ import (
 	"context"
 	"reflect"
 
-	"gitlab.eolink.com/apinto/aoaccount/service/usage"
-	"gitlab.eolink.com/apinto/common/autowire"
+	"github.com/eolinker/ap-account/service/usage"
+	"github.com/eolinker/go-common/autowire"
 )
 
 type UserId = string

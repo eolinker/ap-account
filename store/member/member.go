@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"gitlab.eolink.com/apinto/common/store"
+	"github.com/eolinker/go-common/store"
 	"gorm.io/gorm/clause"
 )
 

@@ -3,10 +3,10 @@ package user_group
 import (
 	"reflect"
 
+	user_group_dto "github.com/eolinker/ap-account/module/user-group/dto"
+	user_dto "github.com/eolinker/ap-account/module/user/dto"
+	"github.com/eolinker/go-common/autowire"
 	"github.com/gin-gonic/gin"
-	user_group_dto "gitlab.eolink.com/apinto/aoaccount/module/user-group/dto"
-	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
-	"gitlab.eolink.com/apinto/common/autowire"
 )
 
 type IUserGroupController interface {

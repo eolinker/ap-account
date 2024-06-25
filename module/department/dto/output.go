@@ -1,6 +1,6 @@
 package department_dto
 
-import "gitlab.eolink.com/apinto/common/auto"
+import "github.com/eolinker/go-common/auto"
 
 type Department struct {
 	Id       string        `json:"id"`

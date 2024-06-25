@@ -3,9 +3,9 @@ package account
 import (
 	"context"
 	"fmt"
-	auth_password "gitlab.eolink.com/apinto/aoaccount/auth_driver/auth-password"
-	"gitlab.eolink.com/apinto/aoaccount/module/account/dto"
-	"gitlab.eolink.com/apinto/aoaccount/service/user"
+	auth_password "github.com/eolinker/ap-account/auth_driver/auth-password"
+	"github.com/eolinker/ap-account/module/account/dto"
+	"github.com/eolinker/ap-account/service/user"
 )
 
 var (

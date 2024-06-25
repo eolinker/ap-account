@@ -2,8 +2,8 @@ package account
 
 import (
 	"context"
-	"gitlab.eolink.com/apinto/aoaccount/module/account/dto"
-	"gitlab.eolink.com/apinto/common/autowire"
+	"github.com/eolinker/ap-account/module/account/dto"
+	"github.com/eolinker/go-common/autowire"
 	"reflect"
 )
 

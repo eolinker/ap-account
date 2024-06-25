@@ -2,8 +2,8 @@ package department
 
 import (
 	"context"
-	"gitlab.eolink.com/apinto/common/auto"
-	"gitlab.eolink.com/apinto/common/autowire"
+	"github.com/eolinker/go-common/auto"
+	"github.com/eolinker/go-common/autowire"
 	"reflect"
 )
 

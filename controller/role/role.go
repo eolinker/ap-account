@@ -1,9 +1,9 @@
 package role
 
 import (
+	role_dto "github.com/eolinker/ap-account/module/role/dto"
+	"github.com/eolinker/go-common/autowire"
 	"github.com/gin-gonic/gin"
-	role_dto "gitlab.eolink.com/apinto/aoaccount/module/role/dto"
-	"gitlab.eolink.com/apinto/common/autowire"
 	"reflect"
 )
 

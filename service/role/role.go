@@ -2,7 +2,7 @@ package role
 
 import (
 	"context"
-	"gitlab.eolink.com/apinto/common/autowire"
+	"github.com/eolinker/go-common/autowire"
 	"reflect"
 )
 

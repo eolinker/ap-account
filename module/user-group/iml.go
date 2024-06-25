@@ -2,12 +2,12 @@ package user_group
 
 import (
 	"context"
+	user_group_dto "github.com/eolinker/ap-account/module/user-group/dto"
+	"github.com/eolinker/ap-account/service/member"
+	user_group "github.com/eolinker/ap-account/service/user-group"
+	"github.com/eolinker/go-common/auto"
+	"github.com/eolinker/go-common/utils"
 	"github.com/google/uuid"
-	user_group_dto "gitlab.eolink.com/apinto/aoaccount/module/user-group/dto"
-	"gitlab.eolink.com/apinto/aoaccount/service/member"
-	user_group "gitlab.eolink.com/apinto/aoaccount/service/user-group"
-	"gitlab.eolink.com/apinto/common/auto"
-	"gitlab.eolink.com/apinto/common/utils"
 )
 
 var (

@@ -4,8 +4,8 @@ import (
 	"context"
 	"reflect"
 
-	department_dto "gitlab.eolink.com/apinto/aoaccount/module/department/dto"
-	"gitlab.eolink.com/apinto/common/autowire"
+	department_dto "github.com/eolinker/ap-account/module/department/dto"
+	"github.com/eolinker/go-common/autowire"
 )
 
 type IDepartmentModule interface {

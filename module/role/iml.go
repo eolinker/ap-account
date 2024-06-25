@@ -3,11 +3,11 @@ package role
 import (
 	"context"
 
+	role_dto "github.com/eolinker/ap-account/module/role/dto"
+	"github.com/eolinker/ap-account/service/role"
+	"github.com/eolinker/go-common/auto"
+	"github.com/eolinker/go-common/utils"
 	"github.com/google/uuid"
-	role_dto "gitlab.eolink.com/apinto/aoaccount/module/role/dto"
-	"gitlab.eolink.com/apinto/aoaccount/service/role"
-	"gitlab.eolink.com/apinto/common/auto"
-	"gitlab.eolink.com/apinto/common/utils"
 )
 
 var (

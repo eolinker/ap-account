@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"strings"
 
-	"gitlab.eolink.com/apinto/aoaccount/service/account"
-	"gitlab.eolink.com/apinto/common/autowire"
+	"github.com/eolinker/ap-account/service/account"
+	"github.com/eolinker/go-common/autowire"
 	"golang.org/x/crypto/pbkdf2"
 	"gorm.io/gorm"
 )

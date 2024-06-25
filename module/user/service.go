@@ -4,8 +4,8 @@ import (
 	"context"
 	"reflect"
 
-	user_dto "gitlab.eolink.com/apinto/aoaccount/module/user/dto"
-	"gitlab.eolink.com/apinto/common/autowire"
+	user_dto "github.com/eolinker/ap-account/module/user/dto"
+	"github.com/eolinker/go-common/autowire"
 )
 
 type IUserModule interface {

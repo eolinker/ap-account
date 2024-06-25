@@ -1,6 +1,6 @@
 package account
 
-import "gitlab.eolink.com/apinto/aoaccount/store"
+import "github.com/eolinker/ap-account/store"
 
 type UserAuth struct {
 	Uid         string `json:"uid,omitempty"`

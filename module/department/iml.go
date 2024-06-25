@@ -4,14 +4,14 @@ import (
 	"context"
 	"errors"
 
-	"gitlab.eolink.com/apinto/common/store"
+	"github.com/eolinker/go-common/store"
 
+	department_dto "github.com/eolinker/ap-account/module/department/dto"
+	"github.com/eolinker/ap-account/service/account"
+	"github.com/eolinker/ap-account/service/department"
+	department_member "github.com/eolinker/ap-account/service/department-member"
+	"github.com/eolinker/go-common/utils"
 	"github.com/google/uuid"
-	department_dto "gitlab.eolink.com/apinto/aoaccount/module/department/dto"
-	"gitlab.eolink.com/apinto/aoaccount/service/account"
-	"gitlab.eolink.com/apinto/aoaccount/service/department"
-	department_member "gitlab.eolink.com/apinto/aoaccount/service/department-member"
-	"gitlab.eolink.com/apinto/common/utils"
 )
 
 var (

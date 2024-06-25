@@ -1,7 +1,7 @@
 package role
 
 import (
-	"gitlab.eolink.com/apinto/aoaccount/store"
+	"github.com/eolinker/ap-account/store"
 	"time"
 )
 
