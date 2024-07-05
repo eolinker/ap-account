@@ -30,6 +30,9 @@ func (m *imlDepartmentModule) CreateDepartment(ctx context.Context, department *
 	if id == "" {
 		id = uuid.NewString()
 	}
+	if department.ParentID == "" {
+		department.ParentID = "-1"
+	}
 	err := m.service.Create(ctx, id, department.Name, department.ParentID)
 	if err != nil {
 		return "", err

@@ -39,14 +39,18 @@ func ToTree(entities []*store.Department) *Node {
 		return i.UUID, n
 	})
 
-	for _, i := range all {
-		if i.parent == "" {
+	for _, i := range entities {
+		if i.Parent == "" {
 			continue
 		}
-		if p, ok := all[i.parent]; ok {
-			p.Children = append(p.Children, i)
+		n, ok := all[i.UUID]
+		if !ok {
+			continue
+		}
+		if p, ok := all[i.Parent]; ok {
+			p.Children = append(p.Children, n)
 		} else {
-			root.Children = append(root.Children, i)
+			root.Children = append(root.Children, n)
 		}
 	}
 	return root
