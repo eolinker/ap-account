@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/eolinker/ap-account/service/department"
 	"log"
+	"os"
 
 	auth_password "github.com/eolinker/ap-account/auth_driver/auth-password"
 	user_dto "github.com/eolinker/ap-account/module/user/dto"
@@ -94,8 +95,11 @@ func (s *imlUserModule) OnComplete() {
 				if err != nil {
 					return err
 				}
-				return s.authPassword.Save(ctx, create.UID, "admin", defaultInitPassword)
-
+				password := os.Getenv("ADMIN_PASSWORD")
+				if password == "" {
+					password = defaultInitPassword
+				}
+				return s.authPassword.Save(ctx, create.UID, "admin", password)
 			})
 			if err != nil {
 				log.Fatal("init admin error: ", err.Error())
