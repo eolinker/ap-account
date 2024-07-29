@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/eolinker/go-common/auto"
+
 	"github.com/eolinker/ap-account/store"
 	"github.com/eolinker/go-common/utils"
 )
@@ -26,7 +28,18 @@ func (i *imlRoleService) List(ctx context.Context) ([]*Role, error) {
 }
 
 func (i *imlRoleService) Create(ctx context.Context, input *CreateRole) error {
-	return i.store.Insert(ctx, createEntityHandler(input))
+	now := time.Now()
+	r := &store.Role{
+		UUID:        input.Id,
+		Name:        input.Name,
+		Group:       input.Group,
+		Description: input.Description,
+		Permit:      input.Permit,
+		CreateAt:    now,
+		UpdateAt:    now,
+		Default:     input.Default,
+	}
+	return i.store.Insert(ctx, r)
 }
 
 func (i *imlRoleService) Edit(ctx context.Context, id string, input *UpdateRole) error {
@@ -34,7 +47,23 @@ func (i *imlRoleService) Edit(ctx context.Context, id string, input *UpdateRole)
 	if err != nil {
 		return err
 	}
-	updateHandler(r, input)
+
+	if input.Name != nil {
+		r.Name = *input.Name
+	}
+	if input.Description != nil {
+		r.Description = *input.Description
+	}
+	if input.Group != nil {
+		r.Group = *input.Group
+	}
+	if input.Permit != nil {
+		r.Permit = *input.Permit
+	}
+	if input.Default != nil {
+		r.Default = *input.Default
+	}
+	r.UpdateAt = time.Now()
 
 	return i.store.Save(ctx, r)
 }
@@ -84,41 +113,44 @@ func (i *imlRoleService) GetLabels(ctx context.Context, ids ...string) map[strin
 	})
 }
 
-func labelHandler(e *store.Role) []string {
-	return []string{e.Name, e.UUID, e.Description}
+func (i *imlRoleService) OnComplete() {
+	auto.RegisterService("role", i)
 }
-func uniquestHandler(i *CreateRole) []map[string]interface{} {
-	return []map[string]interface{}{{"uuid": i.Id}}
-}
-func createEntityHandler(i *CreateRole) *store.Role {
-	now := time.Now()
-	return &store.Role{
-		UUID:        i.Id,
-		Name:        i.Name,
-		Group:       i.Group,
-		Description: i.Description,
-		Permit:      i.Permit,
-		CreateAt:    now,
-		UpdateAt:    now,
-		Default:     i.Default,
-	}
-}
-func updateHandler(e *store.Role, i *UpdateRole) {
-	if i.Name != nil {
-		e.Name = *i.Name
-	}
-	if i.Description != nil {
-		e.Description = *i.Description
-	}
-	if i.Group != nil {
-		e.Group = *i.Group
-	}
-	if i.Permit != nil {
-		e.Permit = *i.Permit
-	}
-	if i.Default != nil {
-		e.Default = *i.Default
-	}
-	e.UpdateAt = time.Now()
 
+var _ IRoleMemberService = (*iMemberService)(nil)
+
+type iMemberService struct {
+	store store.IRoleMemberStore `autowired:""`
+}
+
+func (i *iMemberService) Add(ctx context.Context, input *AddMember) error {
+	return i.store.Save(ctx, &store.RoleMember{
+		Target: input.Target,
+		Role:   input.Role,
+		User:   input.User,
+	})
+}
+
+func (i *iMemberService) RemoveUserRole(ctx context.Context, user string, target string) error {
+	_, err := i.store.DeleteWhere(ctx, map[string]interface{}{
+		"target": target,
+		"user":   user,
+	})
+	return err
+}
+
+func (i *iMemberService) ListByTarget(ctx context.Context, target string) ([]*Member, error) {
+	list, err := i.store.List(ctx, map[string]interface{}{
+		"target": target,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return utils.SliceToSlice(list, func(e *store.RoleMember) *Member {
+		return &Member{
+			Role:   e.Role,
+			User:   e.User,
+			Target: e.Target,
+		}
+	}), nil
 }

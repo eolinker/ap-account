@@ -44,3 +44,15 @@ func FromEntity(e *store.Role) *Role {
 		UpdateAt:    e.UpdateAt,
 	}
 }
+
+type AddMember struct {
+	Role   string
+	User   string
+	Target string
+}
+
+type Member struct {
+	Role   string
+	User   string
+	Target string
+}

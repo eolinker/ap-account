@@ -12,3 +12,8 @@ type SaveRole struct {
 	Description *string   `json:"description"`
 	Permits     *[]string `json:"permits"`
 }
+
+type UpdateUserRole struct {
+	User  string   `json:"user"`
+	Roles []string `json:"roles" aocheck:"role"`
+}

@@ -3,15 +3,17 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/eolinker/ap-account/service/department"
 	"log"
 	"os"
+
+	"github.com/eolinker/ap-account/service/role"
+
+	"github.com/eolinker/ap-account/service/department"
 
 	auth_password "github.com/eolinker/ap-account/auth_driver/auth-password"
 	user_dto "github.com/eolinker/ap-account/module/user/dto"
 	department_member "github.com/eolinker/ap-account/service/department-member"
 	"github.com/eolinker/ap-account/service/user"
-	user_group "github.com/eolinker/ap-account/service/user-group"
 	"github.com/eolinker/go-common/auto"
 	"github.com/eolinker/go-common/register"
 	"github.com/eolinker/go-common/server"
@@ -28,12 +30,13 @@ const (
 )
 
 type imlUserModule struct {
-	userService             user.IUserService                  `autowired:""`
-	departmentMemberService department_member.IMemberService   `autowired:""`
-	departmentService       department.IDepartmentService      `autowired:""`
-	authPassword            auth_password.AuthPassword         `autowired:""`
-	userGroupsMemberService user_group.IUserGroupMemberService `autowired:""`
-	transaction             store.ITransaction                 `autowired:""`
+	userService             user.IUserService                `autowired:""`
+	departmentMemberService department_member.IMemberService `autowired:""`
+	departmentService       department.IDepartmentService    `autowired:""`
+	authPassword            auth_password.AuthPassword       `autowired:""`
+	roleMemberService       role.IRoleMemberService          `autowired:""`
+	//userGroupsMemberService user_group.IUserGroupMemberService `autowired:""`
+	transaction store.ITransaction `autowired:""`
 }
 
 func (s *imlUserModule) UpdateInfo(ctx context.Context, id string, user *user_dto.EditUser) error {
@@ -58,7 +61,7 @@ func (s *imlUserModule) Simple(ctx context.Context, keyword string) ([]*user_dto
 			Name:       s.Username,
 			Email:      s.Email,
 			Department: nil,
-			UserGroups: nil,
+			UserRoles:  nil,
 		}
 	}, func(u *user.User) bool {
 		return u.Status == 1
@@ -70,14 +73,14 @@ func (s *imlUserModule) Simple(ctx context.Context, keyword string) ([]*user_dto
 	if err != nil {
 		return nil, err
 	}
-	groups, err := s.userGroupsMemberService.FilterMembersForUser(ctx, userIds...)
-	if err != nil {
-		return nil, err
-	}
+	//groups, err := s.userGroupsMemberService.FilterMembersForUser(ctx, userIds...)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	for _, r := range result {
 		r.Department = auto.List(members[r.Uid])
-		r.UserGroups = auto.List(groups[r.Uid])
+		//r.UserGroups = auto.List(groups[r.Uid])
 	}
 	return result, nil
 }
@@ -159,14 +162,17 @@ func (s *imlUserModule) Search(ctx context.Context, department string, keyword s
 	if err != nil {
 		return nil, err
 	}
-	groups, err := s.userGroupsMemberService.FilterMembersForUser(ctx, userIds...)
+	roleMembers, err := s.roleMemberService.ListByTarget(ctx, "system")
 	if err != nil {
 		return nil, err
 	}
+	roleMembersMap := utils.SliceToMapArrayO(roleMembers, func(r *role.Member) (string, string) {
+		return r.User, r.Role
+	})
 
 	for _, r := range result {
 		r.Department = auto.List(members[r.Uid])
-		r.UserGroups = auto.List(groups[r.Uid])
+		r.UserRoles = auto.List(roleMembersMap[r.Uid])
 	}
 	return result, nil
 }

@@ -11,7 +11,7 @@ type UserInfo struct {
 	Email      string       `json:"email"`
 	Department []auto.Label `json:"department" aolabel:"department"`
 	Enable     bool         `json:"enable"`
-	UserGroups []auto.Label `json:"user_group" aolabel:"user_group"`
+	UserRoles  []auto.Label `json:"user_roles" aolabel:"role"`
 }
 
 type UserSimple struct {
@@ -19,7 +19,7 @@ type UserSimple struct {
 	Name       string       `json:"name"`
 	Email      string       `json:"email"`
 	Department []auto.Label `json:"department" aolabel:"department"`
-	UserGroups []auto.Label `json:"user_group" aolabel:"user_group"`
+	UserRoles  []auto.Label `json:"user_roles" aolabel:"role"`
 }
 
 func CreateUserInfoFromModel(m *user.User) *UserInfo {
@@ -29,7 +29,7 @@ func CreateUserInfoFromModel(m *user.User) *UserInfo {
 		Email:      m.Email,
 		Department: nil,
 		Enable:     true,
-		UserGroups: nil,
+		UserRoles:  nil,
 	}
 	if m.Status != 1 {
 		dto.Enable = false

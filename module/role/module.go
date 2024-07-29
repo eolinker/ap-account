@@ -20,6 +20,10 @@ type IRoleModule interface {
 	Template(ctx context.Context, group string) ([]access.Template, error)
 }
 
+type IRoleMemberModule interface {
+	UpdateUserRole(ctx context.Context, input *role_dto.UpdateUserRole) error
+}
+
 func init() {
 	autowire.Auto[IRoleModule](func() reflect.Value {
 		return reflect.ValueOf(new(imlRoleModule))

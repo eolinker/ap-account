@@ -17,8 +17,18 @@ type IRoleService interface {
 	GetDefaultRole(ctx context.Context, group string) (*Role, error)
 }
 
+type IRoleMemberService interface {
+	Add(ctx context.Context, input *AddMember) error
+	RemoveUserRole(ctx context.Context, user string, target string) error
+	ListByTarget(ctx context.Context, target string) ([]*Member, error)
+}
+
 func init() {
 	autowire.Auto[IRoleService](func() reflect.Value {
 		return reflect.ValueOf(new(imlRoleService))
+	})
+
+	autowire.Auto[IRoleMemberService](func() reflect.Value {
+		return reflect.ValueOf(new(iMemberService))
 	})
 }
