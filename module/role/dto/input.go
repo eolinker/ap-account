@@ -1,8 +1,14 @@
 package role_dto
 
 type CreateRole struct {
-	Name string `json:"name"`
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Permits     []string `json:"permits"`
 }
-type Edit struct {
-	Name string `json:"name"`
+
+type SaveRole struct {
+	Name        *string   `json:"name"`
+	Description *string   `json:"description"`
+	Permits     *[]string `json:"permits"`
 }

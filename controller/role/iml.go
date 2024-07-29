@@ -2,38 +2,37 @@ package role
 
 import (
 	"github.com/eolinker/ap-account/module/role"
-	role_dto "github.com/eolinker/ap-account/module/role/dto"
+	role_dto2 "github.com/eolinker/ap-account/module/role/dto"
+	"github.com/eolinker/go-common/access"
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	_ IRoleController = (*imlRoleController)(nil)
-)
+var _ IRoleController = (*imlRoleController)(nil)
 
 type imlRoleController struct {
 	module role.IRoleModule `autowired:""`
 }
 
-func (c *imlRoleController) Get(ctx *gin.Context, id string) (*role_dto.Role, error) {
-	return c.module.Get(ctx, id)
+func (i *imlRoleController) Add(ctx *gin.Context, group string, r *role_dto2.CreateRole) error {
+	return i.module.Add(ctx, group, r)
 }
 
-func (c *imlRoleController) List(ctx *gin.Context) ([]*role_dto.Role, error) {
-	return c.module.List(ctx)
+func (i *imlRoleController) Save(ctx *gin.Context, group string, id string, r *role_dto2.SaveRole) error {
+	return i.module.Save(ctx, group, id, r)
 }
 
-func (c *imlRoleController) Save(ctx *gin.Context, id string, input *role_dto.Edit) error {
-	return c.module.Edit(ctx, id, input)
+func (i *imlRoleController) Delete(ctx *gin.Context, group string, id string) error {
+	return i.module.Delete(ctx, group, id)
 }
 
-func (c *imlRoleController) Create(ctx *gin.Context, id string, input *role_dto.CreateRole) error {
-	return c.module.Crete(ctx, id, input)
+func (i *imlRoleController) Get(ctx *gin.Context, group string, id string) (*role_dto2.Role, error) {
+	return i.module.Get(ctx, group, id)
 }
 
-func (c *imlRoleController) Delete(ctx *gin.Context, id string) error {
-	return c.module.Delete(ctx, id)
+func (i *imlRoleController) Search(ctx *gin.Context, group string, keyword string) ([]*role_dto2.Item, error) {
+	return i.module.Search(ctx, group, keyword)
 }
 
-func (c *imlRoleController) Simple(ctx *gin.Context, keyword string) ([]*role_dto.Simple, error) {
-	return c.module.Simple(ctx, keyword)
+func (i *imlRoleController) Template(ctx *gin.Context, group string) ([]access.Template, error) {
+	return i.module.Template(ctx, group)
 }

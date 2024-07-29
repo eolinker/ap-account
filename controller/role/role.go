@@ -1,19 +1,22 @@
 package role
 
 import (
-	role_dto "github.com/eolinker/ap-account/module/role/dto"
+	"reflect"
+
+	role_dto2 "github.com/eolinker/ap-account/module/role/dto"
+
+	"github.com/eolinker/go-common/access"
 	"github.com/eolinker/go-common/autowire"
 	"github.com/gin-gonic/gin"
-	"reflect"
 )
 
 type IRoleController interface {
-	Get(ctx *gin.Context, id string) (*role_dto.Role, error)
-	List(ctx *gin.Context) ([]*role_dto.Role, error)
-	Save(ctx *gin.Context, id string, input *role_dto.Edit) error
-	Create(ctx *gin.Context, id string, input *role_dto.CreateRole) error
-	Delete(ctx *gin.Context, id string) error
-	Simple(ctx *gin.Context, keyword string) ([]*role_dto.Simple, error)
+	Add(ctx *gin.Context, group string, r *role_dto2.CreateRole) error
+	Save(ctx *gin.Context, group string, id string, r *role_dto2.SaveRole) error
+	Delete(ctx *gin.Context, group string, id string) error
+	Get(ctx *gin.Context, group string, id string) (*role_dto2.Role, error)
+	Search(ctx *gin.Context, group string, keyword string) ([]*role_dto2.Item, error)
+	Template(ctx *gin.Context, group string) ([]access.Template, error)
 }
 
 func init() {

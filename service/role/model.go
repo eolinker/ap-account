@@ -1,22 +1,46 @@
 package role
 
 import (
-	"github.com/eolinker/ap-account/store"
 	"time"
+
+	"github.com/eolinker/ap-account/store"
 )
 
 type Role struct {
-	Id         string
-	Name       string
-	Creator    string
-	CreateTime time.Time
+	Id          string
+	Name        string
+	Group       string
+	Description string
+	Permit      []string
+	CreateAt    time.Time
+	UpdateAt    time.Time
 }
 
-func CreateModel(o *store.Role) *Role {
+type CreateRole struct {
+	Id          string
+	Name        string
+	Group       string
+	Description string
+	Permit      []string
+	Default     bool
+}
+
+type UpdateRole struct {
+	Name        *string
+	Group       *string
+	Description *string
+	Permit      *[]string
+	Default     *bool
+}
+
+func FromEntity(e *store.Role) *Role {
 	return &Role{
-		Id:         o.UUID,
-		Name:       o.Name,
-		Creator:    o.Creator,
-		CreateTime: o.CreateTime,
+		Id:          e.UUID,
+		Name:        e.Name,
+		Group:       e.Group,
+		Description: e.Description,
+		Permit:      e.Permit,
+		CreateAt:    e.CreateAt,
+		UpdateAt:    e.UpdateAt,
 	}
 }
