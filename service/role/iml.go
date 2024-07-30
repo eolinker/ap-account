@@ -16,6 +16,14 @@ type imlRoleService struct {
 	store store.IRoleStore `autowired:""`
 }
 
+func (i *imlRoleService) GetSupperRole(ctx context.Context, group string) (*Role, error) {
+	info, err := i.store.First(ctx, map[string]interface{}{
+		"group":  group,
+		"supper": true,
+	})
+	return FromEntity(info), err
+}
+
 func (i *imlRoleService) List(ctx context.Context) ([]*Role, error) {
 	list, err := i.store.List(ctx, nil)
 	if err != nil {
@@ -123,6 +131,14 @@ type iMemberService struct {
 	store store.IRoleMemberStore `autowired:""`
 }
 
+func (i *iMemberService) CountByRole(ctx context.Context, target string, role string) (int64, error) {
+	w := map[string]interface{}{
+		"target": target,
+		"role":   role,
+	}
+	return i.store.CountWhere(ctx, w)
+}
+
 func (i *iMemberService) Add(ctx context.Context, input *AddMember) error {
 	return i.store.Save(ctx, &store.RoleMember{
 		Target: input.Target,
@@ -131,18 +147,28 @@ func (i *iMemberService) Add(ctx context.Context, input *AddMember) error {
 	})
 }
 
-func (i *iMemberService) RemoveUserRole(ctx context.Context, user string, target string) error {
-	_, err := i.store.DeleteWhere(ctx, map[string]interface{}{
+func (i *iMemberService) RemoveUserRole(ctx context.Context, target string, userId ...string) error {
+	w := map[string]interface{}{
 		"target": target,
-		"user":   user,
-	})
+	}
+
+	if len(userId) > 0 {
+		w["user"] = userId
+	}
+
+	_, err := i.store.DeleteWhere(ctx, w)
 	return err
 }
 
-func (i *iMemberService) ListByTarget(ctx context.Context, target string) ([]*Member, error) {
-	list, err := i.store.List(ctx, map[string]interface{}{
+func (i *iMemberService) List(ctx context.Context, target string, userIds ...string) ([]*Member, error) {
+	w := map[string]interface{}{
 		"target": target,
-	})
+	}
+
+	if len(userIds) > 0 {
+		w["user"] = userIds
+	}
+	list, err := i.store.List(ctx, w)
 	if err != nil {
 		return nil, err
 	}

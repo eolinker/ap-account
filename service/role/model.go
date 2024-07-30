@@ -1,6 +1,7 @@
 package role
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/eolinker/ap-account/store"
@@ -55,4 +56,17 @@ type Member struct {
 	Role   string
 	User   string
 	Target string
+}
+
+const (
+	GroupSystem = "system"
+	GroupTeam   = "team"
+)
+
+func TeamTarget(id string) string {
+	return fmt.Sprintf("team:%s", id)
+}
+
+func SystemTarget() string {
+	return "system"
 }

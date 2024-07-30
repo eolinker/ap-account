@@ -2,6 +2,7 @@ package users
 
 import (
 	"encoding/json"
+
 	"github.com/eolinker/ap-account/module/user"
 	user_dto "github.com/eolinker/ap-account/module/user/dto"
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,10 @@ var _ IUserController = (*imlUserController)(nil)
 
 type imlUserController struct {
 	module user.IUserModule `autowired:""`
+}
+
+func (c *imlUserController) UpdateUserRole(ctx *gin.Context, input *user_dto.UpdateUserRole) error {
+	return c.module.UpdateUserRole(ctx, input)
 }
 
 func (c *imlUserController) UpdateInfo(ctx *gin.Context, id string, user *user_dto.EditUser) error {

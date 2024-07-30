@@ -17,6 +17,7 @@ type IRoleController interface {
 	Get(ctx *gin.Context, group string, id string) (*role_dto2.Role, error)
 	Search(ctx *gin.Context, group string, keyword string) ([]*role_dto2.Item, error)
 	Template(ctx *gin.Context, group string) ([]access.Template, error)
+	Simple(ctx *gin.Context, group string) ([]*role_dto2.SimpleItem, error)
 }
 
 func init() {

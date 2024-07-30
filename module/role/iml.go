@@ -27,6 +27,19 @@ type imlRoleModule struct {
 	roleService role.IRoleService `autowired:""`
 }
 
+func (i *imlRoleModule) Simple(ctx context.Context, group string) ([]*role_dto.SimpleItem, error) {
+	list, err := i.roleService.SearchByGroup(ctx, "", group)
+	if err != nil {
+		return nil, err
+	}
+	return utils.SliceToSlice(list, func(item *role.Role) *role_dto.SimpleItem {
+		return &role_dto.SimpleItem{
+			ID:   item.Id,
+			Name: item.Name,
+		}
+	}), nil
+}
+
 func validPermits(group string, permits []string) error {
 	p, has := access.GetPermit(group)
 	if !has {

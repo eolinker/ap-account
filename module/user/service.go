@@ -17,6 +17,7 @@ type IUserModule interface {
 	CountStatus(ctx context.Context, enable bool) (int, error)
 	Delete(ctx context.Context, ids ...string) error
 	UpdateInfo(ctx context.Context, id string, user *user_dto.EditUser) error
+	UpdateUserRole(ctx context.Context, input *user_dto.UpdateUserRole) error
 }
 
 func init() {

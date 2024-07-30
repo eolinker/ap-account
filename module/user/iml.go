@@ -34,9 +34,31 @@ type imlUserModule struct {
 	departmentMemberService department_member.IMemberService `autowired:""`
 	departmentService       department.IDepartmentService    `autowired:""`
 	authPassword            auth_password.AuthPassword       `autowired:""`
+	roleService             role.IRoleService                `autowired:""`
 	roleMemberService       role.IRoleMemberService          `autowired:""`
-	//userGroupsMemberService user_group.IUserGroupMemberService `autowired:""`
-	transaction store.ITransaction `autowired:""`
+	transaction             store.ITransaction               `autowired:""`
+}
+
+func (s *imlUserModule) UpdateUserRole(ctx context.Context, input *user_dto.UpdateUserRole) error {
+	return s.transaction.Transaction(ctx, func(ctx context.Context) error {
+		for _, roleId := range input.Roles {
+			err := s.roleMemberService.RemoveUserRole(ctx, roleId, input.Users...)
+			if err != nil {
+				return err
+			}
+			for _, userId := range input.Users {
+				err = s.roleMemberService.Add(ctx, &role.AddMember{
+					Role:   roleId,
+					User:   userId,
+					Target: role.SystemTarget(),
+				})
+				if err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	})
 }
 
 func (s *imlUserModule) UpdateInfo(ctx context.Context, id string, user *user_dto.EditUser) error {
@@ -162,7 +184,7 @@ func (s *imlUserModule) Search(ctx context.Context, department string, keyword s
 	if err != nil {
 		return nil, err
 	}
-	roleMembers, err := s.roleMemberService.ListByTarget(ctx, "system")
+	roleMembers, err := s.roleMemberService.List(ctx, "system")
 	if err != nil {
 		return nil, err
 	}
@@ -182,6 +204,18 @@ func (s *imlUserModule) AddForPassword(ctx context.Context, user *user_dto.Creat
 
 	err := s.transaction.Transaction(ctx, func(ctx context.Context) error {
 		newUser, err := s.userService.Create(ctx, "", user.Name, user.Email, user.Mobile)
+		if err != nil {
+			return err
+		}
+		r, err := s.roleService.GetDefaultRole(ctx, role.GroupSystem)
+		if err != nil {
+			return err
+		}
+		err = s.roleMemberService.Add(ctx, &role.AddMember{
+			Role:   r.Id,
+			User:   newUser.UID,
+			Target: role.SystemTarget(),
+		})
 		if err != nil {
 			return err
 		}

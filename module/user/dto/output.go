@@ -11,7 +11,7 @@ type UserInfo struct {
 	Email      string       `json:"email"`
 	Department []auto.Label `json:"department" aolabel:"department"`
 	Enable     bool         `json:"enable"`
-	UserRoles  []auto.Label `json:"user_roles" aolabel:"role"`
+	UserRoles  []auto.Label `json:"roles" aolabel:"role"`
 }
 
 type UserSimple struct {

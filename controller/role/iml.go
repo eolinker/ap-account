@@ -13,6 +13,10 @@ type imlRoleController struct {
 	module role.IRoleModule `autowired:""`
 }
 
+func (i *imlRoleController) Simple(ctx *gin.Context, group string) ([]*role_dto2.SimpleItem, error) {
+	return i.module.Simple(ctx, group)
+}
+
 func (i *imlRoleController) Add(ctx *gin.Context, group string, r *role_dto2.CreateRole) error {
 	return i.module.Add(ctx, group, r)
 }

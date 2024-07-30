@@ -17,6 +17,7 @@ type IUserController interface {
 	//CountStatus(ctx *gin.Context, enable bool) (int, error)
 	Delete(ctx *gin.Context, id string) error
 	UpdateInfo(ctx *gin.Context, id string, user *user_dto.EditUser) error
+	UpdateUserRole(ctx *gin.Context, input *user_dto.UpdateUserRole) error
 }
 
 func init() {

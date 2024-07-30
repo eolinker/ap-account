@@ -15,12 +15,14 @@ type IRoleService interface {
 	SearchByGroup(ctx context.Context, keyword string, group string) ([]*Role, error)
 	List(ctx context.Context) ([]*Role, error)
 	GetDefaultRole(ctx context.Context, group string) (*Role, error)
+	GetSupperRole(ctx context.Context, group string) (*Role, error)
 }
 
 type IRoleMemberService interface {
 	Add(ctx context.Context, input *AddMember) error
-	RemoveUserRole(ctx context.Context, user string, target string) error
-	ListByTarget(ctx context.Context, target string) ([]*Member, error)
+	RemoveUserRole(ctx context.Context, target string, userId ...string) error
+	List(ctx context.Context, target string, userId ...string) ([]*Member, error)
+	CountByRole(ctx context.Context, target string, role string) (int64, error)
 }
 
 func init() {

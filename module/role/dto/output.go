@@ -20,3 +20,8 @@ type Item struct {
 	UpdateTime auto.TimeLabel `json:"update_time"`
 	CanDelete  bool           `json:"can_delete"`
 }
+
+type SimpleItem struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}

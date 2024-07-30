@@ -18,3 +18,8 @@ type CreateUser struct {
 type EditUser struct {
 	Name *string `json:"name"`
 }
+
+type UpdateUserRole struct {
+	Roles []string `json:"roles" aocheck:"role"`
+	Users []string `json:"users" aocheck:"user"`
+}

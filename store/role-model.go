@@ -11,6 +11,7 @@ type Role struct {
 	Permit      []string  `gorm:"type:text;not null;column:permit;comment:权限列表;serializer:json"`
 	CreateAt    time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP;column:create_at;comment:创建时间"`
 	UpdateAt    time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP;column:update_at;comment:修改时间"`
+	Supper      bool      `gorm:"type:tinyint(1);not null;column:supper;comment:是否超管"`
 	Default     bool      `gorm:"type:tinyint(1);not null;column:default;comment:是否默认角色"`
 }
 

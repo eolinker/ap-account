@@ -18,6 +18,7 @@ type IRoleModule interface {
 	Get(ctx context.Context, group string, id string) (*role_dto.Role, error)
 	Search(ctx context.Context, group string, keyword string) ([]*role_dto.Item, error)
 	Template(ctx context.Context, group string) ([]access.Template, error)
+	Simple(ctx context.Context, group string) ([]*role_dto.SimpleItem, error)
 }
 
 type IRoleMemberModule interface {
