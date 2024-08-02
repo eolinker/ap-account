@@ -25,9 +25,9 @@ func (r *Role) TableName() string {
 
 type RoleMember struct {
 	Id     int64  `gorm:"column:id;type:int(11);not null;comment:id;primary_key;comment:主键ID;"`
-	Role   string `gorm:"type:varchar(100);not null;column:role;comment:角色ID"`
-	User   string `gorm:"type:varchar(100);not null;column:user;comment:用户ID"`
-	Target string `gorm:"type:varchar(100);not null;column:target;comment:目标ID"`
+	Role   string `gorm:"type:varchar(100);not null;column:role;comment:角色ID;uniqueIndex:unique_role_user"`
+	User   string `gorm:"type:varchar(100);not null;column:user;comment:用户ID;uniqueIndex:unique_role_user"`
+	Target string `gorm:"type:varchar(100);not null;column:target;comment:目标ID;uniqueIndex:unique_role_user"`
 }
 
 func (r *RoleMember) TableName() string {

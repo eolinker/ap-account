@@ -140,8 +140,10 @@ func (i *imlRoleModule) OnComplete() {
 		})
 		defaultRoles := access.Roles()
 		for group, rs := range defaultRoles {
+
 			for _, r := range rs {
 				id := fmt.Sprintf("%s.%s", group, r.Name)
+
 				if _, has := roleMap[id]; !has {
 					err = i.roleService.Create(ctx, &role.CreateRole{
 						Id:          id,
@@ -157,6 +159,7 @@ func (i *imlRoleModule) OnComplete() {
 					}
 				}
 			}
+
 		}
 	})
 }

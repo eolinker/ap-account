@@ -24,8 +24,12 @@ func (i *imlRoleService) GetSupperRole(ctx context.Context, group string) (*Role
 	return FromEntity(info), err
 }
 
-func (i *imlRoleService) List(ctx context.Context) ([]*Role, error) {
-	list, err := i.store.List(ctx, nil)
+func (i *imlRoleService) List(ctx context.Context, roleId ...string) ([]*Role, error) {
+	w := make(map[string]interface{})
+	if len(roleId) > 0 {
+		w["uuid"] = roleId
+	}
+	list, err := i.store.List(ctx, w)
 	if err != nil {
 		return nil, err
 	}

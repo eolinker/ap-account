@@ -13,7 +13,7 @@ type IRoleService interface {
 	Delete(ctx context.Context, id string) error
 	Get(ctx context.Context, id string) (*Role, error)
 	SearchByGroup(ctx context.Context, keyword string, group string) ([]*Role, error)
-	List(ctx context.Context) ([]*Role, error)
+	List(ctx context.Context, roleId ...string) ([]*Role, error)
 	GetDefaultRole(ctx context.Context, group string) (*Role, error)
 	GetSupperRole(ctx context.Context, group string) (*Role, error)
 }
