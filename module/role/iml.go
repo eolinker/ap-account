@@ -24,7 +24,8 @@ import (
 var _ IRoleModule = (*imlRoleModule)(nil)
 
 type imlRoleModule struct {
-	roleService role.IRoleService `autowired:""`
+	roleService       role.IRoleService       `autowired:""`
+	roleMemberService role.IRoleMemberService `autowired:""`
 }
 
 func (i *imlRoleModule) Simple(ctx context.Context, group string) ([]*role_dto.SimpleItem, error) {
@@ -150,6 +151,7 @@ func (i *imlRoleModule) OnComplete() {
 						Name:        r.CName,
 						Description: r.CName,
 						Group:       group,
+						Supper:      r.Supper,
 						Permit:      r.Permits,
 						Default:     r.Default,
 					})
@@ -159,7 +161,29 @@ func (i *imlRoleModule) OnComplete() {
 					}
 				}
 			}
+		}
+		// 判断admin账号是否有角色
+		members, err := i.roleMemberService.List(ctx, role.GroupSystem, "admin")
+		if err != nil {
+			log.Error("init role error: ", err.Error())
+			return
+		}
 
+		if len(members) == 0 {
+			r, err := i.roleService.GetSupperRole(ctx, role.GroupSystem)
+			if err != nil {
+				log.Error("get supper role error: ", err.Error())
+				return
+			}
+			err = i.roleMemberService.Add(ctx, &role.AddMember{
+				Role:   r.Id,
+				User:   "admin",
+				Target: role.GroupSystem,
+			})
+			if err != nil {
+				log.Error("init role error: ", err.Error())
+				return
+			}
 		}
 	})
 }

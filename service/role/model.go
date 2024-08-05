@@ -23,6 +23,7 @@ type CreateRole struct {
 	Group       string
 	Description string
 	Permit      []string
+	Supper      bool
 	Default     bool
 }
 

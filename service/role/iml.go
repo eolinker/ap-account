@@ -21,6 +21,9 @@ func (i *imlRoleService) GetSupperRole(ctx context.Context, group string) (*Role
 		"group":  group,
 		"supper": true,
 	})
+	if err != nil {
+		return nil, err
+	}
 	return FromEntity(info), err
 }
 
@@ -47,6 +50,7 @@ func (i *imlRoleService) Create(ctx context.Context, input *CreateRole) error {
 		Group:       input.Group,
 		Description: input.Description,
 		Permit:      input.Permit,
+		Supper:      input.Supper,
 		CreateAt:    now,
 		UpdateAt:    now,
 		Default:     input.Default,
