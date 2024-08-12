@@ -41,11 +41,15 @@ type imlUserModule struct {
 
 func (s *imlUserModule) UpdateUserRole(ctx context.Context, input *user_dto.UpdateUserRole) error {
 	return s.transaction.Transaction(ctx, func(ctx context.Context) error {
+		if len(input.Roles) < 1 {
+			return fmt.Errorf("at least one role")
+		}
+		err := s.roleMemberService.RemoveUserRole(ctx, role.SystemTarget(), input.Users...)
+		if err != nil {
+			return err
+		}
+
 		for _, roleId := range input.Roles {
-			err := s.roleMemberService.RemoveUserRole(ctx, roleId, input.Users...)
-			if err != nil {
-				return err
-			}
 			for _, userId := range input.Users {
 				err = s.roleMemberService.Add(ctx, &role.AddMember{
 					Role:   roleId,
