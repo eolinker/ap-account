@@ -12,7 +12,7 @@ type IAccountController interface {
 	login.ILoginCheck
 	LoginOut(ctx *gin.Context) error
 	Login(ctx *gin.Context, login *dto.Login) error
-
+	ResetPassword(ctx *gin.Context, input *dto.ResetPassword) error
 	CheckLogin(ctx *gin.Context) (string, []any, error)
 	PermitSystem(ctx *gin.Context) ([]string, error)
 	Profile(ctx *gin.Context) (*dto.Profile, error)

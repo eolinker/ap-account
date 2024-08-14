@@ -21,7 +21,7 @@ func (c *imlDepartmentController) Simple(ctx *gin.Context) (*department_dto.Simp
 	if err != nil {
 		return nil, err
 	}
-	dpsroot.Name = "这里换成证书授权名"
+	dpsroot.Name = "所有成员"
 	dpsroot.Id = ""
 	return dpsroot, nil
 }
@@ -49,7 +49,7 @@ func (c *imlDepartmentController) Tree(ctx *gin.Context) (*department_dto.Depart
 		return nil, err
 	}
 	unknown := len(users)
-	dpsroot.Name = "这里换成证书授权名"
+	dpsroot.Name = "所有成员"
 	dpsroot.Id = ""
 	dpsroot.Number += unknown
 	disableCount, err := c.usersModule.CountStatus(ctx, false)

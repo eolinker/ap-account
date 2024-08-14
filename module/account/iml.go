@@ -6,6 +6,7 @@ import (
 	auth_password "github.com/eolinker/ap-account/auth_driver/auth-password"
 	"github.com/eolinker/ap-account/module/account/dto"
 	"github.com/eolinker/ap-account/service/user"
+	"github.com/eolinker/go-common/utils"
 )
 
 var (
@@ -15,6 +16,17 @@ var (
 type imlAccountModule struct {
 	userService     user.IUserService          `autowired:""`
 	passwordService auth_password.AuthPassword `autowired:""`
+}
+
+func (m *imlAccountModule) ResetPassword(ctx context.Context, password dto.ResetPassword) error {
+	users, err := m.userService.Get(ctx, utils.UserId(ctx))
+	if err != nil {
+		return err
+	}
+	if len(users) != 1 {
+		return fmt.Errorf("user not exist")
+	}
+	return m.passwordService.ResetPassword(ctx, users[0].Username, password.OldPassword, password.NewPassword)
 }
 
 func (m *imlAccountModule) Login(ctx context.Context, username string, password string) (string, error) {

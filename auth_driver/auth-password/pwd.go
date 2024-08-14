@@ -26,15 +26,17 @@ const (
 )
 
 var (
-	_                     AuthPassword = (*imlAuthPassword)(nil)
-	ErrorUsernameNotExist              = errors.New("user not exist")
-	ErrorInvalidPassword               = errors.New("invalid password")
+	_                       AuthPassword = (*imlAuthPassword)(nil)
+	ErrorUsernameNotExist                = errors.New("user not exist")
+	ErrorInvalidPassword                 = errors.New("invalid password")
+	ErrorInvalidOldPassword              = errors.New("invalid old password")
 )
 
 type AuthPassword interface {
 	Save(ctx context.Context, id string, identifier string, certificate string) error
 	Login(ctx context.Context, identifier string, certificate string) (string, error)
 	Delete(ctx context.Context, ids ...string) error
+	ResetPassword(ctx context.Context, identifier string, oldPassword, newPassword string) error
 }
 
 func init() {
@@ -78,6 +80,28 @@ func (s *imlAuthPassword) Login(ctx context.Context, identifier string, certific
 	}
 
 	return "", ErrorInvalidPassword
+}
+
+func (s *imlAuthPassword) ResetPassword(ctx context.Context, identifier string, oldPassword, newPassword string) error {
+	auth, err := s.accountService.GetIdentifier(ctx, DriverName, identifier)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return ErrorUsernameNotExist
+		}
+		return err
+	}
+	if checkPasswordHash(oldPassword, auth.Certificate) {
+		secret, err := hashSecret([]byte(newPassword))
+		if err != nil {
+			return err
+		}
+		err = s.accountService.Save(ctx, DriverName, auth.Uid, auth.Identifier, secret)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	return ErrorInvalidOldPassword
 }
 func hashSecret(secret []byte) (string, error) {
 	salt, err := generateRandomSalt(defaultSaltLen)

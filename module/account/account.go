@@ -9,6 +9,7 @@ import (
 
 type IAccountModule interface {
 	Login(ctx context.Context, username string, password string) (string, error)
+	ResetPassword(ctx context.Context, password dto.ResetPassword) error
 	Profile(ctx context.Context, uid string) (*dto.Profile, error)
 }
 

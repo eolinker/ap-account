@@ -26,6 +26,10 @@ type imlAccountController struct {
 	sessionService    session.ISession       `autowired:""`
 }
 
+func (c *imlAccountController) ResetPassword(ctx *gin.Context, input *dto.ResetPassword) error {
+	return c.accountModule.ResetPassword(ctx, *input)
+}
+
 func (c *imlAccountController) LoginOut(ctx *gin.Context) error {
 	sv, err := c.GetSession(ctx)
 	if err != nil {
