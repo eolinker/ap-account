@@ -40,6 +40,10 @@ type imlUserModule struct {
 }
 
 func (s *imlUserModule) UpdateUserRole(ctx context.Context, input *user_dto.UpdateUserRole) error {
+	supperRole, err := s.roleService.GetSupperRole(ctx, role.GroupSystem)
+	if err != nil {
+		return err
+	}
 	return s.transaction.Transaction(ctx, func(ctx context.Context) error {
 		if len(input.Roles) < 1 {
 			return fmt.Errorf("at least one role")
@@ -60,6 +64,13 @@ func (s *imlUserModule) UpdateUserRole(ctx context.Context, input *user_dto.Upda
 					return err
 				}
 			}
+		}
+		count, err := s.roleMemberService.CountByRole(ctx, role.SystemTarget(), supperRole.Id)
+		if err != nil {
+			return err
+		}
+		if count < 1 {
+			return fmt.Errorf("role(%s) must have at least one member", supperRole.Name)
 		}
 		return nil
 	})
