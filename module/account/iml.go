@@ -3,6 +3,7 @@ package account
 import (
 	"context"
 	"fmt"
+
 	auth_password "github.com/eolinker/ap-account/auth_driver/auth-password"
 	"github.com/eolinker/ap-account/module/account/dto"
 	"github.com/eolinker/ap-account/service/user"
@@ -32,6 +33,10 @@ func (m *imlAccountModule) ResetPassword(ctx context.Context, password dto.Reset
 func (m *imlAccountModule) Login(ctx context.Context, username string, password string) (string, error) {
 	uid, err := m.passwordService.Login(ctx, username, password)
 	if err != nil {
+		// 判断是否开启访客模式，若开启，尝试访客登录
+		if utils.GuestAllow() {
+			return utils.GuestLogin(ctx, username, password)
+		}
 		return "", err
 	}
 
@@ -39,6 +44,16 @@ func (m *imlAccountModule) Login(ctx context.Context, username string, password 
 }
 
 func (m *imlAccountModule) Profile(ctx context.Context, uid string) (*dto.Profile, error) {
+	// 判断是否是访客
+	if utils.GuestAllow() && utils.IsGuest(ctx) {
+		return &dto.Profile{
+			Uid:      uid,
+			Username: utils.GuestUser(),
+			Email:    "",
+			Phone:    "",
+			Avatar:   "",
+		}, nil
+	}
 	users, err := m.userService.Get(ctx, uid)
 	if err != nil {
 		return nil, err
