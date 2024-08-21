@@ -20,6 +20,15 @@ var (
 	}
 )
 
+func init() {
+	if utils.GuestAllow() {
+		loginChannel = append(loginChannel, dto.Channel{
+			Name:   "guest_access",
+			Config: nil,
+		})
+	}
+}
+
 type imlAccountController struct {
 	login.ILoginCheck `autowired:""`
 	accountModule     account.IAccountModule `autowired:""`
