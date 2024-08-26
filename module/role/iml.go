@@ -159,6 +159,17 @@ func (i *imlRoleModule) OnComplete() {
 						log.Error("init role error: ", err.Error())
 						continue
 					}
+				} else {
+					err = i.roleService.Edit(ctx, id, &role.UpdateRole{
+						Name:        &r.CName,
+						Description: &r.CName,
+						Permit:      &r.Permits,
+						Default:     &r.Default,
+					})
+					if err != nil {
+						log.Error("init role error: ", err.Error())
+						continue
+					}
 				}
 			}
 		}
