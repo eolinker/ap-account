@@ -8,10 +8,6 @@ import (
 
 	"github.com/eolinker/eosc/log"
 
-	"github.com/eolinker/go-common/server"
-
-	"github.com/eolinker/go-common/register"
-
 	"github.com/eolinker/go-common/auto"
 
 	"github.com/google/uuid"
@@ -125,76 +121,76 @@ func (i *imlRoleModule) Template(ctx context.Context, group string) ([]access.Te
 		return nil, fmt.Errorf("group %s not found", group)
 	}
 
-	return permit.GetTemplate(), nil
+	return access.TemplatesClone(permit.GetTemplate()), nil
 }
 
-func (i *imlRoleModule) OnComplete() {
-	register.Handle(func(v server.Server) {
-		ctx := context.Background()
-		roles, err := i.roleService.List(ctx)
-		if err != nil {
-			log.Error("init role error: ", err.Error())
-			return
-		}
-		roleMap := utils.SliceToMapO(roles, func(r *role.Role) (string, struct{}) {
-			return r.Id, struct{}{}
-		})
-		defaultRoles := access.Roles()
-		for group, rs := range defaultRoles {
+func (i *imlRoleModule) OnInit() {
+	//register.Handle(func(v server.Server) {
+	ctx := context.Background()
+	roles, err := i.roleService.List(ctx)
+	if err != nil {
+		log.Error("init role error: ", err.Error())
+		return
+	}
+	roleMap := utils.SliceToMapO(roles, func(r *role.Role) (string, struct{}) {
+		return r.Id, struct{}{}
+	})
+	defaultRoles := access.Roles()
+	for group, rs := range defaultRoles {
 
-			for _, r := range rs {
-				id := fmt.Sprintf("%s.%s", group, r.Name)
+		for _, r := range rs {
+			id := fmt.Sprintf("%s.%s", group, r.Value)
 
-				if _, has := roleMap[id]; !has {
-					err = i.roleService.Create(ctx, &role.CreateRole{
-						Id:          id,
-						Name:        r.CName,
-						Description: r.CName,
-						Group:       group,
-						Supper:      r.Supper,
-						Permit:      r.Permits,
-						Default:     r.Default,
-					})
-					if err != nil {
-						log.Error("init role error: ", err.Error())
-						continue
-					}
-				} else {
-					err = i.roleService.Edit(ctx, id, &role.UpdateRole{
-						Name:        &r.CName,
-						Description: &r.CName,
-						Permit:      &r.Permits,
-						Default:     &r.Default,
-					})
-					if err != nil {
-						log.Error("init role error: ", err.Error())
-						continue
-					}
+			if _, has := roleMap[id]; !has {
+				err = i.roleService.Create(ctx, &role.CreateRole{
+					Id:          id,
+					Name:        r.Name,
+					Description: r.Name,
+					Group:       group,
+					Supper:      r.Supper,
+					Permit:      r.Permits,
+					Default:     r.Default,
+				})
+				if err != nil {
+					log.Error("init role error: ", err.Error())
+					continue
+				}
+			} else {
+				err = i.roleService.Edit(ctx, id, &role.UpdateRole{
+					Name:        &r.Name,
+					Description: &r.Name,
+					Permit:      &r.Permits,
+					Default:     &r.Default,
+				})
+				if err != nil {
+					log.Error("init role error: ", err.Error())
+					continue
 				}
 			}
 		}
-		// 判断admin账号是否有角色
-		members, err := i.roleMemberService.List(ctx, role.GroupSystem, "admin")
+	}
+	// 判断admin账号是否有角色
+	members, err := i.roleMemberService.List(ctx, role.GroupSystem, "admin")
+	if err != nil {
+		log.Error("init role error: ", err.Error())
+		return
+	}
+
+	if len(members) == 0 {
+		r, err := i.roleService.GetSupperRole(ctx, role.GroupSystem)
+		if err != nil {
+			log.Error("get supper role error: ", err.Error())
+			return
+		}
+		err = i.roleMemberService.Add(ctx, &role.AddMember{
+			Role:   r.Id,
+			User:   "admin",
+			Target: role.GroupSystem,
+		})
 		if err != nil {
 			log.Error("init role error: ", err.Error())
 			return
 		}
-
-		if len(members) == 0 {
-			r, err := i.roleService.GetSupperRole(ctx, role.GroupSystem)
-			if err != nil {
-				log.Error("get supper role error: ", err.Error())
-				return
-			}
-			err = i.roleMemberService.Add(ctx, &role.AddMember{
-				Role:   r.Id,
-				User:   "admin",
-				Target: role.GroupSystem,
-			})
-			if err != nil {
-				log.Error("init role error: ", err.Error())
-				return
-			}
-		}
-	})
+	}
+	//})
 }

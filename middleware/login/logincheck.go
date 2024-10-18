@@ -1,17 +1,20 @@
 package login
 
 import (
+	"net/http"
+	"reflect"
+	"strings"
+
 	"github.com/eolinker/ap-account/session"
 	"github.com/eolinker/go-common/autowire"
 	"github.com/eolinker/go-common/ignore"
 	"github.com/eolinker/go-common/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"reflect"
-	"strings"
 )
 
 const MiddlewareName = "login"
+
+const i18nCookieName = "i18next"
 
 var (
 	_ ILoginCheck = (*imlLoginCheck)(nil)
@@ -79,6 +82,8 @@ func (m *imlLoginCheck) Handler(ginCtx *gin.Context) {
 	status, uid := m.ISession.Check(ginCtx, sv)
 	switch status {
 	case session.Login:
+		cookie, _ := ginCtx.Cookie(i18nCookieName)
+		utils.SetI18n(ginCtx, cookie)
 		utils.SetUserId(ginCtx, uid)
 		return
 	case session.Expired:

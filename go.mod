@@ -6,7 +6,7 @@ toolchain go1.21.1
 
 require (
 	github.com/eolinker/eosc v0.17.3
-	github.com/eolinker/go-common v1.0.2
+	github.com/eolinker/go-common v1.1.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.6.0
 	golang.org/x/crypto v0.23.0
@@ -49,3 +49,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
