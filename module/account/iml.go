@@ -52,6 +52,7 @@ func (m *imlAccountModule) Profile(ctx context.Context, uid string) (*dto.Profil
 			Email:    "",
 			Phone:    "",
 			Avatar:   "",
+			Type:     "guest",
 		}, nil
 	}
 	users, err := m.userService.Get(ctx, uid)
@@ -68,5 +69,6 @@ func (m *imlAccountModule) Profile(ctx context.Context, uid string) (*dto.Profil
 		Email:    u.Email,
 		Phone:    u.Mobile,
 		Avatar:   "",
+		Type:     "user",
 	}, nil
 }

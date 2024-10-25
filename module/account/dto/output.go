@@ -6,6 +6,7 @@ type Profile struct {
 	Email    string `json:"email,omitempty"`
 	Phone    string `json:"phone,omitempty"`
 	Avatar   string `json:"avatar,omitempty"`
+	Type     string `json:"type"`
 }
 type Channel struct {
 	Name   string      `json:"name,omitempty"`
