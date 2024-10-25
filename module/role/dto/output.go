@@ -23,5 +23,5 @@ type Item struct {
 
 type SimpleItem struct {
 	ID   string `json:"id"`
-	Name string `json:"name"`
+	Name string `json:"name" aoi18n:""`
 }
