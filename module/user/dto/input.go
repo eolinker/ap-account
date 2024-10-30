@@ -11,12 +11,14 @@ type Disable struct {
 type CreateUser struct {
 	Name        string   `json:"name"`
 	Email       string   `json:"email"`
+	Password    string   `json:"password"`
 	Mobile      string   `json:"mobile"`
 	Departments []string `json:"department_ids"`
 }
 
 type EditUser struct {
-	Name *string `json:"name"`
+	Name     *string `json:"name"`
+	Password *string `json:"password"`
 }
 
 type UpdateUserRole struct {

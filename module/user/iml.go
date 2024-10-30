@@ -80,8 +80,17 @@ func (s *imlUserModule) UpdateInfo(ctx context.Context, id string, user *user_dt
 	if user == nil {
 		return nil
 	}
-	_, err := s.userService.Update(ctx, id, user.Name, nil, nil)
-	return err
+	return s.transaction.Transaction(ctx, func(ctx context.Context) error {
+		u, err := s.userService.Update(ctx, id, user.Name, nil, nil)
+		if err != nil {
+			return err
+		}
+		if user.Password != nil {
+			return s.authPassword.Save(ctx, u.UID, u.Username, *user.Password)
+		}
+		return nil
+	})
+
 }
 
 func (s *imlUserModule) Simple(ctx context.Context, keyword string) ([]*user_dto.UserSimple, error) {
@@ -234,8 +243,11 @@ func (s *imlUserModule) AddForPassword(ctx context.Context, user *user_dto.Creat
 		if err != nil {
 			return err
 		}
-
-		err = s.authPassword.Save(ctx, newUser.UID, user.Name, defaultInitPassword)
+		password := defaultInitPassword
+		if user.Password != "" {
+			password = user.Password
+		}
+		err = s.authPassword.Save(ctx, newUser.UID, user.Name, password)
 		if err != nil {
 			return err
 		}
