@@ -88,6 +88,18 @@ func (s *imlUserModule) UpdateInfo(ctx context.Context, id string, user *user_dt
 		if user.Password != nil {
 			return s.authPassword.Save(ctx, u.UID, u.Username, *user.Password)
 		}
+		err = s.departmentMemberService.OnRemoveUsers(ctx, id)
+		if err != nil {
+			return err
+		}
+		if user.Departments != nil && len(*user.Departments) > 0 {
+			for _, dp := range *user.Departments {
+				err = s.departmentMemberService.AddMemberTo(ctx, dp, id)
+				if err != nil {
+					return err
+				}
+			}
+		}
 		return nil
 	})
 

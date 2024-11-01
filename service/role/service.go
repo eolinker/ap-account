@@ -16,12 +16,14 @@ type IRoleService interface {
 	List(ctx context.Context, roleId ...string) ([]*Role, error)
 	GetDefaultRole(ctx context.Context, group string) (*Role, error)
 	GetSupperRole(ctx context.Context, group string) (*Role, error)
+	ListByPermit(ctx context.Context, permit string) ([]*RoleByPermit, error)
 }
 
 type IRoleMemberService interface {
 	Add(ctx context.Context, input *AddMember) error
 	RemoveUserRole(ctx context.Context, target string, userId ...string) error
 	List(ctx context.Context, target string, userId ...string) ([]*Member, error)
+	ListByRoleIds(ctx context.Context, userId string, roleIds ...string) ([]*Member, error)
 	CountByRole(ctx context.Context, target string, role string) (int64, error)
 }
 

@@ -13,12 +13,13 @@ type CreateUser struct {
 	Email       string   `json:"email"`
 	Password    string   `json:"password"`
 	Mobile      string   `json:"mobile"`
-	Departments []string `json:"department_ids"`
+	Departments []string `json:"department_ids" aocheck:"department"`
 }
 
 type EditUser struct {
-	Name     *string `json:"name"`
-	Password *string `json:"password"`
+	Name        *string   `json:"name"`
+	Password    *string   `json:"password"`
+	Departments *[]string `json:"department_ids" aocheck:"department"`
 }
 
 type UpdateUserRole struct {

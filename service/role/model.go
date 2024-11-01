@@ -2,6 +2,7 @@ package role
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/eolinker/ap-account/store"
@@ -68,6 +69,9 @@ func TeamTarget(id string) string {
 	return fmt.Sprintf("team:%s", id)
 }
 
+func TrimTeamTarget(target string) string {
+	return strings.TrimPrefix(target, "team:")
+}
 func SystemTarget() string {
 	return "system"
 }

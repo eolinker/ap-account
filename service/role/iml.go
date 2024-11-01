@@ -2,6 +2,7 @@ package role
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/eolinker/go-common/auto"
@@ -14,6 +15,14 @@ var _ IRoleService = (*imlRoleService)(nil)
 
 type imlRoleService struct {
 	store store.IRoleStore `autowired:""`
+}
+
+func (i *imlRoleService) ListByPermit(ctx context.Context, permit string) ([]*RoleByPermit, error) {
+	list, has := manager.GetRolesByPermit(permit)
+	if !has {
+		return nil, fmt.Errorf("permit %s not found", permit)
+	}
+	return list, nil
 }
 
 func (i *imlRoleService) GetSupperRole(ctx context.Context, group string) (*Role, error) {
@@ -55,7 +64,18 @@ func (i *imlRoleService) Create(ctx context.Context, input *CreateRole) error {
 		UpdateAt:    now,
 		Default:     input.Default,
 	}
-	return i.store.Insert(ctx, r)
+	err := i.store.Insert(ctx, r)
+	if err != nil {
+		return err
+	}
+	manager.SetRole(&Role{
+		Id:          r.UUID,
+		Name:        r.Name,
+		Group:       r.Group,
+		Description: r.Description,
+		Permit:      r.Permit,
+	})
+	return nil
 }
 
 func (i *imlRoleService) Edit(ctx context.Context, id string, input *UpdateRole) error {
@@ -81,11 +101,25 @@ func (i *imlRoleService) Edit(ctx context.Context, id string, input *UpdateRole)
 	}
 	r.UpdateAt = time.Now()
 
-	return i.store.Save(ctx, r)
+	err = i.store.Save(ctx, r)
+	if err != nil {
+		return err
+	}
+	info, err := i.Get(ctx, id)
+	if err != nil {
+		return err
+	}
+	manager.SetRole(info)
+	return nil
 }
 
 func (i *imlRoleService) Delete(ctx context.Context, id string) error {
-	return i.store.DeleteUUID(ctx, id)
+	err := i.store.DeleteUUID(ctx, id)
+	if err != nil {
+		return err
+	}
+	manager.DeleteRole(id)
+	return nil
 }
 
 func (i *imlRoleService) Get(ctx context.Context, id string) (*Role, error) {
@@ -137,6 +171,25 @@ var _ IRoleMemberService = (*iMemberService)(nil)
 
 type iMemberService struct {
 	store store.IRoleMemberStore `autowired:""`
+}
+
+func (i *iMemberService) ListByRoleIds(ctx context.Context, userId string, roleIds ...string) ([]*Member, error) {
+	w := make(map[string]interface{})
+	if len(roleIds) > 0 {
+		w["role"] = roleIds
+	}
+	w["user"] = userId
+	list, err := i.store.List(ctx, w)
+	if err != nil {
+		return nil, err
+	}
+	return utils.SliceToSlice(list, func(e *store.RoleMember) *Member {
+		return &Member{
+			Target: e.Target,
+			Role:   e.Role,
+			User:   e.User,
+		}
+	}), nil
 }
 
 func (i *iMemberService) CountByRole(ctx context.Context, target string, role string) (int64, error) {
