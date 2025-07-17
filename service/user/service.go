@@ -2,13 +2,14 @@ package user
 
 import (
 	"context"
+	"reflect"
+
 	"github.com/eolinker/go-common/auto"
 	"github.com/eolinker/go-common/autowire"
-	"reflect"
 )
 
 type IUserService interface {
-	Create(ctx context.Context, id string, name string, email, mobile string) (*User, error)
+	Create(ctx context.Context, id, name, email, mobile, from string) (*User, error)
 	SetStatus(ctx context.Context, status int, ids ...string) error
 	Delete(ctx context.Context, ids ...string) error
 	Search(ctx context.Context, keyword string, status int, department ...string) ([]*User, error)

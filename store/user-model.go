@@ -31,6 +31,7 @@ type UserInfo struct {
 	CreateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP;column:create_at;comment:创建时间"`
 	UpdateAt  time.Time `gorm:"type:timestamp;NOT NULL;DEFAULT:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;column:update_at;comment:修改时间" json:"update_at"`
 	PushToken string    `gorm:"column:push_token;type:VARCHAR(50);NOT NULL;comment: 推送token;"`
+	From      string    `gorm:"column:from;type:varchar(10);NOT NULL;comment: 来源"`
 	IsDeleted bool      `gorm:"type:tinyint(1);not null;column:is_delete;comment:是否删除"`
 }
 

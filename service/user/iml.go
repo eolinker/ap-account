@@ -58,7 +58,7 @@ func (s *imlUserService) CountStatus(ctx context.Context, status int) (int64, er
 	return s.store.CountQuery(ctx, "status=?", status)
 }
 
-func (s *imlUserService) Create(ctx context.Context, id string, name string, email, mobile string) (*User, error) {
+func (s *imlUserService) Create(ctx context.Context, id, name, email, mobile, from string) (*User, error) {
 	if id == "" {
 		id = uuid.NewString()
 	}
@@ -74,6 +74,7 @@ func (s *imlUserService) Create(ctx context.Context, id string, name string, ema
 		UpdateAt:  time.Now(),
 		PushToken: email,
 		IsDeleted: false,
+		From:      from,
 	}
 	err := s.store.Transaction(ctx, func(ctx context.Context) error {
 		first, err := s.store.First(ctx, map[string]interface{}{

@@ -1,9 +1,10 @@
 package user
 
 import (
+	"time"
+
 	"github.com/eolinker/ap-account/service"
 	"github.com/eolinker/ap-account/store"
-	"time"
 )
 
 type User struct {
@@ -15,6 +16,7 @@ type User struct {
 	CreateTime time.Time      `json:"create_time"`
 	UpdateTime time.Time      `json:"update_time"`
 	PushToken  string         `json:"push_token"`
+	From       string         `json:"from"`
 	Status     int            `json:"status"`
 }
 

@@ -35,6 +35,34 @@ type imlAccountController struct {
 	sessionService    session.ISession       `autowired:""`
 }
 
+func (c *imlAccountController) ThirdDrivers(ctx *gin.Context) ([]*dto.ThirdDriverItem, error) {
+	return c.accountModule.ThirdDrivers(ctx)
+}
+
+func (c *imlAccountController) ThirdDriverInfo(ctx *gin.Context, driver string) (*dto.ThirdDriver, error) {
+	return c.accountModule.ThirdDriverInfo(ctx, driver)
+}
+
+func (c *imlAccountController) SaveThirdDriver(ctx *gin.Context, driver string, info *dto.ThirdDriver) error {
+	return c.accountModule.SaveThirdDriver(ctx, driver, info)
+}
+
+func (c *imlAccountController) ThirdLogin(ctx *gin.Context, driver string, args *map[string]string) error {
+	if args == nil {
+		args = &map[string]string{}
+	}
+	uid, err := c.accountModule.ThirdLogin(ctx, driver, *args)
+	if err != nil {
+		return err
+	}
+	newSession, err := c.sessionService.CreateSession(ctx, uid)
+	if err != nil {
+		return err
+	}
+	ctx.SetCookie(session.SessionName, newSession, int(session.ExpireTime.Seconds()), "/", "", false, false)
+	return nil
+}
+
 func (c *imlAccountController) ResetPassword(ctx *gin.Context, input *dto.ResetPassword) error {
 	return c.accountModule.ResetPassword(ctx, *input)
 }
@@ -65,16 +93,28 @@ func (c *imlAccountController) Login(ctx *gin.Context, login *dto.Login) error {
 }
 
 func (c *imlAccountController) CheckLogin(ctx *gin.Context) (string, []any, error) {
+	loginDrivers := append([]any{}, loginChannel...)
+	drivers, err := c.accountModule.ThirdDrivers(ctx)
+	if err == nil {
+		for _, driver := range drivers {
+			if driver.Enable {
+				loginDrivers = append(loginDrivers, dto.Channel{
+					Name:   driver.Value,
+					Config: driver.Config,
+				})
+			}
+		}
+	}
 	sk, err := c.GetSession(ctx)
 	if err != nil {
-		return "anonymous", loginChannel, nil
+		return "anonymous", loginDrivers, nil
 	}
 	status, _ := c.sessionService.Check(ctx, sk)
 
 	if status != session.Login {
-		return "anonymous", loginChannel, nil
+		return "anonymous", loginDrivers, nil
 	}
-	return "authorized", loginChannel, nil
+	return "authorized", loginDrivers, nil
 }
 
 func (c *imlAccountController) PermitSystem(ctx *gin.Context) ([]string, error) {

@@ -152,7 +152,7 @@ func (s *imlUserModule) OnComplete() {
 		}
 		if len(users) == 0 {
 			err := s.transaction.Transaction(ctx, func(ctx context.Context) error {
-				create, err := s.userService.Create(ctx, "admin", "admin", "", "")
+				create, err := s.userService.Create(ctx, "admin", "admin", "", "", "")
 				if err != nil {
 					return err
 				}
@@ -239,7 +239,7 @@ func (s *imlUserModule) AddForPassword(ctx context.Context, user *user_dto.Creat
 	newId := ""
 
 	err := s.transaction.Transaction(ctx, func(ctx context.Context) error {
-		newUser, err := s.userService.Create(ctx, "", user.Name, user.Email, user.Mobile)
+		newUser, err := s.userService.Create(ctx, "", user.Name, user.Email, user.Mobile, "")
 		if err != nil {
 			return err
 		}
