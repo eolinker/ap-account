@@ -48,6 +48,17 @@ func (c *imlAccountController) SaveThirdDriver(ctx *gin.Context, driver string, 
 }
 
 func (c *imlAccountController) ThirdLogin(ctx *gin.Context, driver string, args *map[string]string) error {
+	if driver == "username" {
+		if args == nil {
+			args = &map[string]string{}
+		}
+		loginArgs := *args
+		login := &dto.Login{
+			Username: loginArgs["name"],
+			Password: loginArgs["password"],
+		}
+		return c.Login(ctx, login)
+	}
 	if args == nil {
 		args = &map[string]string{}
 	}

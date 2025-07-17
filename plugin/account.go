@@ -10,9 +10,10 @@ import (
 func (p *plugin) getAccountApis() []pm3.Api {
 	ignore.IgnorePath("login", http.MethodGet, "/api/v1/account/login")
 	ignore.IgnorePath("login", http.MethodGet, "/api/v1/account/logout")
-	ignore.IgnorePath("login", http.MethodPost, "/api/v1/account/login/username")
+	//ignore.IgnorePath("login", http.MethodPost, "/api/v1/account/login/username")
+	ignore.IgnorePath("login", http.MethodPost, "/api/v1/account/login/:driver")
 	return []pm3.Api{
-		pm3.CreateApiWidthDoc(http.MethodPost, "/api/v1/account/login/username", []string{"context", "body"}, []string{}, p.accountController.Login),
+		//pm3.CreateApiWidthDoc(http.MethodPost, "/api/v1/account/login/username", []string{"context", "body"}, []string{}, p.accountController.Login),
 		pm3.CreateApiWidthDoc(http.MethodGet, "/api/v1/account/logout", []string{"context"}, []string{}, p.accountController.LoginOut),
 
 		pm3.CreateApiWidthDoc(http.MethodPut, "/api/v1/account/password/reset", []string{"context", "body"}, []string{}, p.accountController.ResetPassword),

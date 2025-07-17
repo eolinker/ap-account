@@ -12,6 +12,7 @@ type UserInfo struct {
 	Department []auto.Label `json:"department" aolabel:"department"`
 	Enable     bool         `json:"enable"`
 	UserRoles  []auto.Label `json:"roles" aolabel:"role"`
+	From       string       `json:"from"`
 }
 
 type UserSimple struct {
@@ -30,6 +31,7 @@ func CreateUserInfoFromModel(m *user.User) *UserInfo {
 		Department: nil,
 		Enable:     true,
 		UserRoles:  nil,
+		From:       m.From,
 	}
 	if m.Status != 1 {
 		dto.Enable = false

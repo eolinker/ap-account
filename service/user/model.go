@@ -34,5 +34,6 @@ func CreateModel(e *store.UserInfo) *User {
 		UpdateTime: e.UpdateAt,
 		PushToken:  e.PushToken,
 		Status:     int(e.Status),
+		From:       e.From,
 	}
 }

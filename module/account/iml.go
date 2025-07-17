@@ -109,7 +109,19 @@ func (m *imlAccountModule) ThirdLogin(ctx context.Context, driver string, args m
 		args[k] = v
 	}
 
-	return d.ThirdLogin(ctx, args)
+	uId, err := d.ThirdLogin(ctx, args)
+	if err != nil {
+		return "", err
+	}
+	users, err := m.userService.Get(ctx, uId)
+	if err != nil {
+		return "", err
+	}
+	u := users[0]
+	if u.Status != 1 {
+		return "", fmt.Errorf("user %s is not active", u.Username)
+	}
+	return uId, nil
 }
 
 func (m *imlAccountModule) ResetPassword(ctx context.Context, password dto.ResetPassword) error {
@@ -131,6 +143,14 @@ func (m *imlAccountModule) Login(ctx context.Context, username string, password 
 			return utils.GuestLogin(ctx, username, password)
 		}
 		return "", err
+	}
+	users, err := m.userService.Get(ctx, uid)
+	if err != nil {
+		return "", err
+	}
+	u := users[0]
+	if u.Status != 1 {
+		return "", fmt.Errorf("user %s is not active", username)
 	}
 
 	return uid, nil
