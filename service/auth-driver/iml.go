@@ -70,11 +70,7 @@ func (i *imlAuthService) Save(ctx context.Context, id string, s *Save) error {
 	if s.Enable != nil {
 		info.Enable = *s.Enable
 	}
-	_, err = i.store.Update(ctx, info)
-	if err != nil {
-		return err
-	}
-	return nil
+	return i.store.Save(ctx, info)
 
 }
 
